@@ -1,20 +1,42 @@
-# Diff File Analysis Guide
+# Diff File Analysis Skill
 
 ## 1. Purpose
 
-This guide defines how an AI agent should analyze one changed file from an OpenWrt diffset.
+This skill defines how an AI agent should analyze one changed file from an OpenWrt diffset.
 
-The goal is to turn a changed file into one or more semantic modification records with:
+The goal is to turn each changed file into one or more semantic modification records.
+
+Each record should describe:
 
 ```text
-origin
-scope
-migration_feature
-````
+what changed
+what the change likely means
+where it likely came from
+how broadly it applies
+which migration feature it serves
+what evidence was used
+what still needs lookup
+```
 
-This guide does not decide final migration action. Final decisions belong to cluster-level analysis.
+This skill does not make final migration decisions.
 
-## 2. Available Source Trees
+Final migration decisions belong to cluster-level analysis.
+
+## 2. Required Tag Reference
+
+Do not redefine tag values in this file.
+
+The complete tag definitions are in:
+
+```text
+tag_rules.md
+```
+
+Before assigning `origin`, `scope`, or `migration_feature`, read and follow that file.
+
+This skill only explains when and how to apply those tags.
+
+## 3. Available Source Trees
 
 Reference source trees:
 
@@ -64,15 +86,43 @@ Primary diffset:
 analysis/diffsets/8x-vs-openwrt24-base
 ```
 
-All first-pass analysis starts from this diffset.
+All first-pass analysis starts from the primary diffset.
 
-Other diffsets are reference evidence, not primary analysis input.
+Other diffsets are evidence sources, not primary reading targets.
 
-## 3. Output Format
+## 4. Analysis Unit
 
-For each semantic modification, output one record.
+Dispatch unit:
 
-Recommended columns:
+```text
+one changed file
+```
+
+Tagging unit:
+
+```text
+one semantic modification
+```
+
+A semantic modification may be:
+
+```text
+one diff hunk
+several adjacent hunks with one purpose
+one added board case
+one changed device definition
+one deleted file
+one package/config change with one clear purpose
+one patch-file inner change
+```
+
+If a file has unrelated changes, split it into multiple semantic modification records.
+
+If a file is small and single-purpose, one file-level record is acceptable.
+
+## 5. Output Record Format
+
+For each semantic modification, output:
 
 ```text
 mod_id
@@ -91,9 +141,32 @@ needs_lookup
 notes
 ```
 
-`deletion_reason` is only used for deleted files. Use `none` otherwise.
+Field rules:
 
-`migration_feature` may contain multiple comma-separated values.
+```text
+origin:
+    use tag_rules.md
+
+mtk_version:
+    use tag_rules.md
+
+scope:
+    use tag_rules.md
+
+migration_feature:
+    use tag_rules.md
+
+deletion_reason:
+    only for deleted files
+    use "none" otherwise
+
+needs_lookup:
+    short list of missing checks
+    use "none" if no further lookup is needed
+
+notes:
+    concise explanation
+```
 
 Example:
 
@@ -109,39 +182,313 @@ mtk_version: mtk-24.10
 scope: 8x-only
 migration_feature: image:device-recipe,image:dts-selection,openwrt:package:device-packages
 deletion_reason: none
-evidence: 8x-vs-openwrt24-base primary diff; similar image structure in MTK24
-needs_lookup: compare mtk25 filogic.mk during cluster analysis
-notes: final rewrite decision belongs to image-recipe cluster
+evidence: primary diff; similar image structure in MTK24
+needs_lookup: compare MTK25 filogic.mk during image-recipe cluster analysis
+notes: final rewrite decision belongs to cluster analysis
 ```
 
-## 4. Top-Level Decision Tree
+## 6. Top-Level Decision Tree
 
 For each changed file:
 
 ```text
 1. Read file status from name-status.tsv.
-   Status may be A, M, D, R, C.
+   Status may be A, M, D, R, or C.
 
 2. If status is D:
-   Use the deletion flow.
+   use Deletion Flow.
    Usually one deleted file becomes one record.
 
 3. If status is A or M:
-   Use the modification/addition flow.
+   use Modification / Addition Flow.
    Split into semantic modifications if the file contains multiple purposes.
 
 4. If status is R or C:
-   Treat as rename/copy plus modification.
+   treat as rename/copy plus possible modification.
    Analyze old path, new path, and content delta.
 
-5. Assign origin and scope for each semantic modification.
+5. If file is binary/firmware:
+   do not rely on textual diff.
+   Analyze package metadata, install path, runtime loader, and version/source if available.
 
-6. Assign migration_feature for each semantic modification.
+6. Assign origin, scope, and migration_feature for each semantic modification.
 
-7. Record evidence and unresolved lookup needs.
+7. Record evidence and lookup needs.
 ```
 
-## 5. Deletion Flow
+## 7. Evidence Layers
+
+Use three evidence layers.
+
+```text
+Layer 1: diff hunk
+Layer 2: old and new full file
+Layer 3: inner target source context, if the changed file is a *.patch
+```
+
+Default rule:
+
+```text
+start with diff
+read full files if context is needed
+reconstruct or inspect patch target source only for high-risk or migration-relevant patches
+```
+
+## 8. Ordinary File Analysis
+
+For ordinary source/script/Makefile/config files:
+
+```text
+1. Read per-file patch.
+2. Identify changed hunks.
+3. Decide whether hunks are one semantic modification or several.
+4. If meaning is unclear, read old full file and new full file.
+5. Assign tags per semantic modification.
+```
+
+Diff alone is enough only when:
+
+```text
+file is small
+change is local
+all hunks serve one clear purpose
+the surrounding file structure is irrelevant
+```
+
+Read old and new full files when:
+
+```text
+file contains multiple board cases
+hunk depends on shell case structure or variables
+hunk affects fallback/default behavior
+hunk may affect boards other than 8X
+diff omits important context
+file is high-risk
+```
+
+Files that usually require full-file context:
+
+```text
+target/linux/mediatek/image/filogic.mk
+target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+target/linux/mediatek/filogic/base-files/etc/board.d/01_leds
+target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+package/boot/uboot-mediatek/Makefile
+package/boot/uboot-envtools/files/mediatek_filogic
+package/network/config/wifi-scripts/*
+package/network/services/hostapd/files/*.uc
+package/kernel/linux/modules/*.mk
+kernel config files
+```
+
+## 9. DTS / DTSI / DTSO Analysis
+
+DTS-class files almost always require full context.
+
+For:
+
+```text
+*.dts
+*.dtsi
+*.dtso
+```
+
+Read:
+
+```text
+per-file diff
+old full file
+new full file
+relevant include files
+base DTS/DTSI referenced by overlays
+labels or paths targeted by overlays
+```
+
+Why:
+
+```text
+node meaning depends on parent node
+phandles and labels matter
+overlay target matters
+port graph matters
+pinctrl, regulator, clock, reset, interrupt, nvmem, partition context matters
+```
+
+Split DTS modifications by hardware node or behavior:
+
+```text
+partition layout
+nvmem cells
+Ethernet MAC/PCS/PHY
+SFP cage
+GPIO mux
+PCIe slot
+USB hub
+fan/thermal
+LED/button
+Wi-Fi slot
+cellular slot/SIM
+regulator/power control
+MDIO/I2C/SPI bus
+```
+
+Do not tag an entire board DTS as one semantic modification if multiple hardware areas changed.
+
+## 10. Patch File Analysis
+
+If the changed file is itself a `*.patch`, distinguish two layers.
+
+```text
+outer diff:
+    how the patch file changed between two OpenWrt trees
+
+inner patch:
+    what the patch applies to kernel/U-Boot/package source
+```
+
+Examples:
+
+```text
+target/linux/mediatek/patches-6.6/*.patch
+package/boot/uboot-mediatek/patches/*.patch
+package/kernel/mac80211/patches/*.patch
+package/network/services/hostapd/patches/*.patch
+```
+
+For `*.patch` files:
+
+```text
+1. Read outer diff.
+2. Classify patch file status:
+   added, deleted, modified, copied, renamed, refreshed.
+3. Read inner patch content.
+4. Identify target files modified by inner patch.
+5. Assign migration_feature mainly from inner patch semantics.
+6. Use target source context when needed.
+```
+
+Important:
+
+```text
+origin/scope may use outer diff evidence.
+migration_feature must use inner patch semantics.
+```
+
+Example:
+
+```text
+outer file:
+    target/linux/mediatek/patches-6.6/777-foo.patch
+
+inner patch:
+    modifies drivers/net/phy/as21xxx.c
+
+migration_feature:
+    network:phy:10gbase-t, firmware:phy:runtime
+```
+
+## 11. When to Reconstruct Patch Target Source
+
+Do not reconstruct every patch.
+
+Use three levels.
+
+### Level 1: read patch only
+
+Use when:
+
+```text
+patch is low-risk
+patch is clearly unrelated to 8X
+patch is part of bulk wireless/package deletion
+patch is a simple context refresh
+patch content contains enough context
+```
+
+### Level 2: read patch plus target source
+
+Use when:
+
+```text
+patch touches relevant subsystem
+patch is medium-risk
+patch target function context matters
+patch may be reused or compared
+```
+
+Read:
+
+```text
+patch file
+target source in OpenWrt 24.10
+target source in OpenWrt 25.12
+Linux/U-Boot/mt76 upstream target source if relevant
+```
+
+### Level 3: reconstruct inner old/new source
+
+Use when:
+
+```text
+patch is high-risk
+patch is migration candidate
+patch semantics are unclear
+patch modifies multiple subsystems
+patch touches network/PHY/DSA/SFP/combo/MTD/sysupgrade/firmware/Wi-Fi7/WED/cellular/boot
+```
+
+Generate or inspect:
+
+```text
+inner-old-file
+inner-new-file
+inner-diff
+```
+
+Caution:
+
+```text
+OpenWrt kernel patches apply on top of OpenWrt patch stack, not plain Linux.
+U-Boot package patches apply on top of package source plus earlier package patches.
+For serious migration, patch order matters.
+```
+
+## 12. High-Risk Patch Targets
+
+Patch files require deeper analysis if the inner patch touches:
+
+```text
+drivers/net/
+drivers/net/phy/
+drivers/net/dsa/
+drivers/phy/
+net/dsa/
+phylink
+PCS
+SFP
+MDIO
+PPE
+HNAT
+WED
+TOPS
+crypto/EIP
+MTD
+NAND
+NMBM
+UBI
+partition code
+DTS bindings
+DTS files
+U-Boot board files
+U-Boot storage/env/bootmenu/recovery
+mt76
+Wi-Fi 7 / MLO
+hostapd runtime behavior
+cellular modem support
+firmware loading
+```
+
+## 13. Deletion Flow
 
 A deletion means:
 
@@ -159,7 +506,7 @@ OLD = OpenWrt 24.10 upstream
 NEW = BPI-R4 Pro 8X vendor
 ```
 
-So a deleted file means OpenWrt had it, vendor tree does not.
+A deleted file means OpenWrt had it, vendor tree does not.
 
 For `8x-vs-mtk24-base`:
 
@@ -168,13 +515,13 @@ OLD = openwrt-24.10-mtk
 NEW = BPI-R4 Pro 8X vendor
 ```
 
-So a deleted file means MTK24 applied tree had it, vendor tree does not.
+A deleted file means MTK24 applied tree had it, vendor tree does not.
 
 This is evidence of absence, not proof of intentional removal.
 
-## 5.1 Deletion Reasons
+## 14. Deletion Reasons
 
-Use `deletion_reason` as an auxiliary field.
+Use `deletion_reason`.
 
 Allowed values:
 
@@ -194,179 +541,96 @@ high-risk-removed-support
 unknown
 ```
 
-### `repo-metadata-pruned`
-
-Use for deleted repository metadata.
-
-Examples:
+Definitions:
 
 ```text
-.github/*
-.devcontainer/*
-.gitattributes
-.gitignore
-README-only housekeeping
+repo-metadata-pruned:
+    .github, .devcontainer, CI metadata, repository housekeeping.
+
+build-artifact-pruned:
+    generated files, build output, cache, downloads.
+
+external-feed-pruned:
+    files under external feeds/ checkout.
+
+baseline-mismatch:
+    deletion likely caused by comparing different source commits.
+
+vendor-tree-trimmed:
+    vendor tree appears to omit upstream files to reduce or reshape source.
+
+package-stack-divergence:
+    package patch/source organization differs from upstream.
+
+wireless-stack-divergence:
+    large deletions under mac80211, hostapd, iw, wireless patch stacks.
+
+replaced-elsewhere:
+    same logic appears in another file/path/package.
+
+obsolete-upstream-file:
+    file absent or replaced in OpenWrt 25.12 or newer upstream.
+
+intentional-disable:
+    explicit evidence vendor disabled functionality.
+
+high-risk-removed-support:
+    deleted file may affect 8X hardware support.
+
+unknown:
+    reason unclear.
 ```
 
-Typical tags:
+## 15. Deletion Decision Tree
 
 ```text
-origin = build-noise
-scope = build-only
-migration_feature = source:tree:metadata
+D1. Is the deleted path repository metadata?
+    yes:
+        deletion_reason = repo-metadata-pruned
+        origin = build-noise
+        scope = build-only
+        migration_feature = source:tree:metadata
+        stop.
+
+D2. Is it generated/build/cache/download output?
+    yes:
+        deletion_reason = build-artifact-pruned
+        origin = build-noise
+        scope = build-only
+        migration_feature = source:tree:cleanup
+        stop.
+
+D3. Is it inside external feeds/?
+    yes:
+        deletion_reason = external-feed-pruned
+        origin = build-noise
+        scope = build-only
+        migration_feature = source:feeds:external-feed-config
+        stop unless specifically requested.
+
+D4. Is it large package/wireless patch-stack deletion?
+    yes:
+        deletion_reason = wireless-stack-divergence or package-stack-divergence
+        create one record per file
+        do not deep-read each file unless a cluster depends on it.
+
+D5. Is it in a high-risk path?
+    yes:
+        deletion_reason = high-risk-removed-support or unknown
+        assign migration_feature based on path
+        inspect same path in relevant references.
+
+D6. Does OpenWrt 25.12 also lack this file or has replacement?
+    yes:
+        deletion_reason = obsolete-upstream-file or replaced-elsewhere.
+
+D7. Is there explicit evidence of disabling?
+    yes:
+        deletion_reason = intentional-disable.
+
+D8. Otherwise:
+        deletion_reason = baseline-mismatch, vendor-tree-trimmed, or unknown.
 ```
-
-Usually stop after this.
-
-### `build-artifact-pruned`
-
-Use for deleted generated files, temporary files, build products, caches.
-
-Examples:
-
-```text
-bin/
-build_dir/
-staging_dir/
-tmp/
-logs/
-dl/
-```
-
-Typical tags:
-
-```text
-origin = build-noise
-scope = build-only
-migration_feature = source:tree:cleanup
-```
-
-Usually stop after this.
-
-### `external-feed-pruned`
-
-Use when deleted files belong to external feed checkouts, not OpenWrt base tree.
-
-Examples:
-
-```text
-feeds/packages/*
-feeds/routing/*
-feeds/luci/*
-```
-
-Usually exclude from base-tree analysis.
-
-### `baseline-mismatch`
-
-Use when deletion is likely caused by comparing against a different source commit rather than vendor intent.
-
-Evidence:
-
-```text
-file exists in one upstream snapshot but not another
-diff includes many unrelated targets
-deleted file unrelated to BPI-R4 Pro 8X
-same deletion pattern appears across unrelated packages or targets
-```
-
-Typical notes:
-
-```text
-Do not infer hardware behavior from this deletion.
-```
-
-### `vendor-tree-trimmed`
-
-Use when the vendor source tree appears to omit upstream files to reduce repository size or keep only build-relevant pieces.
-
-Evidence:
-
-```text
-many deleted upstream patch/source files
-deletions concentrated in package stacks not relevant to BPI 8X
-no replacement logic visible in vendor tree
-```
-
-### `package-stack-divergence`
-
-Use when vendor tree differs from upstream package patch/source organization.
-
-Examples:
-
-```text
-package/network/services/hostapd/patches/*
-package/network/utils/iw/patches/*
-package/network/services/dnsmasq/patches/*
-```
-
-This may affect runtime behavior, but often should be handled as one package-stack issue, not one file at a time.
-
-### `wireless-stack-divergence`
-
-Use for large deletions in wireless package stacks.
-
-Examples:
-
-```text
-package/kernel/mac80211/patches/*
-package/network/services/hostapd/patches/*
-package/network/services/hostapd/src/*
-package/network/utils/iw/patches/*
-```
-
-Typical tags:
-
-```text
-origin = openwrt-upstream
-scope = openwrt-generic or build-only
-migration_feature = wireless:mac80211:patch or wireless:hostapd:build
-```
-
-Do not deep-read every deleted wireless patch unless a cluster depends on it.
-
-### `replaced-elsewhere`
-
-Use when the deleted file appears replaced by another file, newer source layout, different package, or different patch stack.
-
-Evidence:
-
-```text
-same logic appears in another path
-same package changed from source-in-tree to downloaded source
-same driver patch exists under another directory or version
-```
-
-### `obsolete-upstream-file`
-
-Use when the deleted file is obsolete in 25.12 or newer upstream.
-
-Evidence:
-
-```text
-file absent in OpenWrt 25.12
-function replaced by newer upstream implementation
-patch already merged into upstream source
-```
-
-### `intentional-disable`
-
-Use only when there is evidence the vendor intentionally disabled functionality.
-
-Evidence:
-
-```text
-Makefile removes package
-config explicitly disables feature
-comment says disabled
-board logic excludes feature
-```
-
-Do not infer this from deletion alone.
-
-### `high-risk-removed-support`
-
-Use for deleted files that may affect 8X hardware support.
 
 High-risk deletion paths:
 
@@ -383,102 +647,46 @@ scripts/mkits.sh
 include/image-commands.mk
 ```
 
-High-risk deletion requires lookup or cluster attention.
+## 16. Modification / Addition Flow
 
-### `unknown`
-
-Use when the deletion reason is unclear.
-
-Record what was checked.
-
-## 5.2 Deletion Decision Tree
+For status `M` or `A`:
 
 ```text
-D1. Is the deleted path repository metadata?
-    yes -> deletion_reason=repo-metadata-pruned
-           origin=build-noise
-           scope=build-only
-           feature=source:tree:metadata
-           stop.
-
-D2. Is it generated/build/cache/download output?
-    yes -> deletion_reason=build-artifact-pruned
-           origin=build-noise
-           scope=build-only
-           feature=source:tree:cleanup
-           stop.
-
-D3. Is it inside external feeds/?
-    yes -> deletion_reason=external-feed-pruned
-           origin=build-noise
-           scope=build-only
-           feature=source:feeds:external-feed-config
-           stop unless specifically requested.
-
-D4. Is it a large package/wireless patch-stack deletion?
-    yes -> deletion_reason=wireless-stack-divergence or package-stack-divergence
-           create one deletion record per file, but do not deep-read each file.
-           group later under wireless/package stack cluster.
-
-D5. Is it in a high-risk path?
-    yes -> deletion_reason=high-risk-removed-support or unknown
-           assign feature based on path.
-           inspect same path in OpenWrt 25.12, MTK24, MTK25, and relevant vendor trees.
-
-D6. Does OpenWrt 25.12 also lack this file or has a replacement?
-    yes -> deletion_reason=obsolete-upstream-file or replaced-elsewhere.
-
-D7. Is there explicit evidence of disabling?
-    yes -> deletion_reason=intentional-disable.
-
-D8. Otherwise:
-    deletion_reason=baseline-mismatch, vendor-tree-trimmed, or unknown.
+1. Read per-file patch.
+2. Identify semantic purposes.
+3. Split if multiple purposes exist.
+4. Read full files if context is needed.
+5. Read reference sources only when needed.
+6. Assign origin, scope, migration_feature.
+7. Record evidence and lookup needs.
 ```
 
-## 6. Modification / Addition Flow
-
-For status `M` or `A`, do not automatically tag the whole file as one unit.
-
-Use the file as the dispatch unit, but produce semantic modification records.
-
-## 6.1 When File-Level Tagging Is Enough
-
-File-level tagging is acceptable when:
+File-level tagging is enough when:
 
 ```text
 file is small
 file has one clear purpose
 all hunks serve one function
-deleted file is low-risk
-Makefile change is a single package option
-single DTS overlay with one purpose
+Makefile change is single-purpose
+single DTS overlay has one behavior
 ```
 
-## 6.2 When to Split Into Semantic Modifications
-
-Split when a file contains multiple functions.
-
-Must split these file types when they contain multiple hunks:
+Split into semantic modifications when:
 
 ```text
-target/linux/mediatek/image/filogic.mk
-target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-package/boot/uboot-mediatek/Makefile
-package/boot/uboot-envtools/files/mediatek_filogic
-DTS/DTSI/DTSO files
-kernel patch files touching multiple target files
-kernel config files
-wifi-scripts
-hostapd Makefile/files
-package/kernel/linux/modules/*.mk
+file contains multiple board cases
+file contains multiple hardware areas
+file changes both build and runtime behavior
+file changes both package selection and image recipe
+patch file modifies multiple target source files
+DTS file changes several independent nodes
 ```
 
-## 6.3 Semantic Split Rules
+## 17. Semantic Split Rules
 
-Split by purpose, not by raw diff hunk.
+Split by purpose, not raw hunk count.
 
-Use one semantic modification for:
+Use one record for:
 
 ```text
 one board case
@@ -497,57 +705,11 @@ one firmware inclusion
 one userspace script behavior
 ```
 
-Combine adjacent hunks if they serve the same purpose.
+Combine adjacent hunks if they serve one purpose.
 
-Split adjacent hunks if they serve different functions.
+Split adjacent hunks if they serve different purposes.
 
-## 6.4 Kernel Patch File Rule
-
-A `*.patch` file may contain more than one semantic change.
-
-For kernel patches, split by:
-
-```text
-upstream commit subject if visible
-target source file
-driver subsystem
-DTS binding vs driver logic
-hardware function
-```
-
-Examples:
-
-```text
-one patch modifies both PHY driver and DTS binding
-    -> split into network:phy:* and dts:* records
-
-one patch modifies switch driver and OpenWrt module packaging
-    -> split into network:switch:* and openwrt:package:* records
-```
-
-## 6.5 DTS Rule
-
-DTS/DTSI/DTSO should be split by hardware node or behavior.
-
-Examples:
-
-```text
-partition layout
-nvmem cells
-Ethernet MAC/PCS/PHY
-SFP cage
-GPIO mux
-PCIe slot
-USB hub
-fan/thermal
-LED/button
-Wi-Fi slot
-cellular slot/SIM
-```
-
-Do not treat an entire board DTS as one tag if multiple hardware areas are changed.
-
-## 7. Origin Decision Tree
+## 18. Origin Decision Tree
 
 For each semantic modification:
 
@@ -555,42 +717,46 @@ For each semantic modification:
 O1. Is it build/repo noise?
     yes -> origin=build-noise.
 
-O2. Is the same or equivalent modification already in OpenWrt 25.12?
+O2. Is the same or equivalent modification in OpenWrt 25.12?
     yes -> origin=openwrt-upstream.
-    Evidence must be semantic equivalence, not merely same path.
 
-O3. Is the same/equivalent modification in OpenWrt main but not 25.12?
+O3. Is it in OpenWrt main but not 25.12?
     yes -> origin=openwrt-main.
 
-O4. Does MTK 24.10 feed or openwrt-24.10-mtk contain the same modification?
+O4. Is it in MTK 24.10 feed or openwrt-24.10-mtk?
     yes:
-      if vendor is materially same -> origin=mtk-inherited, mtk_version=mtk-24.10.
-      if vendor adds BPI-specific behavior -> origin=mtk-plus-bpi, mtk_version=mtk-24.10.
+        if vendor is materially same:
+            origin=mtk-inherited
+            mtk_version=mtk-24.10
+        if vendor adds BPI-specific behavior:
+            origin=mtk-plus-bpi
+            mtk_version=mtk-24.10
 
-O5. Does MTK 25.12 contain the closest version?
+O5. Is closest visible version in MTK 25.12?
     yes:
-      origin=mtk-inherited or mtk-plus-bpi as appropriate.
-      mtk_version=mtk-25.12.
-      note that this may be target-era reference, not vendor source.
+        origin=mtk-inherited or mtk-plus-bpi as appropriate
+        mtk_version=mtk-25.12
+        note as target-era reference if not proven vendor source.
 
-O6. Does MTK 21.02 contain the closest version?
-    yes -> origin=mtk-inherited or mtk-plus-bpi, mtk_version=mtk-21.02.
-    Use mainly for old R4/MT76 history.
+O6. Is closest visible version in MTK 21.02?
+    yes:
+        origin=mtk-inherited or mtk-plus-bpi as appropriate
+        mtk_version=mtk-21.02
 
 O7. Is it a Linux kernel backport?
-    Check linux-v6.6.104, linux-v6.12.62, linux-v6.12.87, linux-v6.18, linux master.
-    If found -> origin=linux-upstream-backport, mtk_version=none.
+    check linux-v6.6.104, linux-v6.12.62, linux-v6.12.87, linux-v6.18, linux master
+    if found -> origin=linux-upstream-backport, mtk_version=none.
 
 O8. Is it a U-Boot upstream backport?
-    Check upstreams/u-boot.
-    If found -> origin=uboot-upstream-backport, mtk_version=none.
+    check upstreams/u-boot
+    if found -> origin=uboot-upstream-backport, mtk_version=none.
 
 O9. Is it mt76-specific and present in upstreams/mt76?
     yes -> origin=mt76-upstream-backport, mtk_version=none.
 
-O10. Does it appear copied/adapted from another BPI board?
-    Check 4E, R4, Lite.
-    If yes -> origin=bpi-other-board.
+O10. Does it appear copied or adapted from another BPI board?
+    check 4E, R4, Lite
+    if yes -> origin=bpi-other-board.
 
 O11. Is it only visible in BPI 8X vendor tree?
     yes -> origin=bpi-only.
@@ -598,7 +764,11 @@ O11. Is it only visible in BPI 8X vendor tree?
 O12. Otherwise -> origin=unknown.
 ```
 
-## 8. Scope Decision Tree
+Use semantic equivalence, not only same path.
+
+Do not infer origin from filename alone.
+
+## 19. Scope Decision Tree
 
 For each semantic modification:
 
@@ -610,81 +780,64 @@ S2. Is it generic OpenWrt behavior affecting many targets?
     yes -> scope=openwrt-generic.
 
 S3. Is it explicitly BPI-R4 Pro 8X-specific?
-    Evidence:
-      8X device name/compatible
-      8X image recipe
-      8X port layout
-      8X 10G SFP/RJ45 combo
-      AS21010P or MxL86252 use specific to 8X
+    evidence:
+        8X device name/compatible
+        8X image recipe
+        8X port layout
+        8X 10G SFP/RJ45 combo
+        AS21010P or MxL86252 behavior specific to 8X
     yes -> scope=8x-only.
 
-S4. Does the same semantic behavior appear in BPI-R4 Pro 4E?
+S4. Does same semantic behavior appear in BPI-R4 Pro 4E?
     yes -> scope=r4-pro-common.
-    Require semantic similarity, not only same file path.
+    require semantic similarity, not only same file path.
 
-S5. Does the same semantic behavior apply to MT7988 boards generally?
-    Evidence:
-      also in BPI-R4 or OpenWrt R4
-      MT7988 Ethernet/PCS/PPE/WED/PCIe/SNAND/clock/pinctrl/thermal
+S5. Does same semantic behavior apply to MT7988 boards generally?
+    evidence:
+        also in BPI-R4 or OpenWrt R4
+        MT7988 Ethernet/PCS/PPE/WED/PCIe/SNAND/clock/pinctrl/thermal
     yes -> scope=mt7988-common.
 
 S6. Does it apply across broader Filogic family?
-    Evidence:
-      similar logic across MT7981/MT7986/MT7987/MT7988
-      generic Filogic image/storage/board.d/package/driver pattern
+    evidence:
+        similar logic across MT7981/MT7986/MT7987/MT7988
+        generic Filogic image/storage/board.d/package/driver pattern
     yes -> scope=filogic-common.
 
 S7. Is it only BPI vendor style shared across boards?
-    Evidence:
-      similar shell style
-      similar packaging pattern
-      similar habit of modifying RFB files
-      no clear shared hardware behavior
+    evidence:
+        similar shell style
+        similar package/default config
+        similar vendor patch organization
+        no clear shared hardware behavior
     yes -> scope=bpi-style-common.
 
 S8. Otherwise -> scope=unknown.
 ```
 
-## 9. Migration Feature Assignment
+## 20. Migration Feature Assignment
 
-Assign one or more `migration_feature` tags based on semantic purpose.
+Assign one or more `migration_feature` tags using `tag_rules.md`.
 
-Use format:
-
-```text
-domain:subsystem:function
-```
-
-Do not bind too early to concrete 8X chips or ports. Concrete hardware binding belongs to cluster metadata.
-
-Examples:
+Rules:
 
 ```text
-network:phy:10gbase-t
-network:combo:sfp-rj45
-wireless:mt76:firmware
-cellular:sim:interface
-accel:ppe:flow-offload
+use domain:subsystem:function
+use router-generic tags
+do not bind too early to 8X-specific chips or ports
+concrete 8X hardware binding belongs to cluster metadata
 ```
-
-## 9.1 Feature by Path Hints
 
 Use path as a hint, not proof.
 
+Common path hints:
+
 ```text
 package/boot/arm-trusted-firmware-mediatek/*
-    boot:tf-a:build
-    boot:tf-a:bl2
-    boot:tf-a:fip
+    boot:tf-a:*
 
 package/boot/uboot-mediatek/*
-    boot:uboot:build
-    boot:uboot:target
-    boot:uboot:dts
-    boot:uboot:defconfig
-    boot:uboot:bootmenu
-    boot:uboot:recovery
-    boot:uboot:storage-layout
+    boot:uboot:*
 
 package/boot/uboot-envtools/*
     boot:uboot:env
@@ -709,13 +862,7 @@ target/linux/mediatek/files-*/arch/*/boot/dts/*
     cellular:* if modem/SIM/WWAN slots are described
 
 target/linux/mediatek/patches-*/*
-    depends on patch content:
-      dts:*
-      network:*
-      storage:*
-      bus:*
-      accel:*
-      firmware:*
+    depends on inner patch content
 
 target/linux/mediatek/*/base-files/etc/board.d/02_network
     openwrt:board-d:network
@@ -737,39 +884,30 @@ target/linux/mediatek/*/base-files/lib/upgrade/platform.sh
     storage:sysupgrade:backup-restore
 
 package/kernel/mt76/*
-    wireless:mt76:driver
-    wireless:mt76:firmware
-    wireless:mt76:eeprom
+    wireless:mt76:*
     wireless:wed:runtime
-    firmware:wifi:runtime
-    firmware:wifi:eeprom
+    firmware:wifi:*
 
 package/kernel/mac80211/*
     wireless:mac80211:patch
     wireless:regulatory:db
 
 package/network/services/hostapd/*
-    wireless:hostapd:build
-    wireless:hostapd:ucode
+    wireless:hostapd:*
     wireless:mlo:config
 
 package/network/config/wifi-scripts/*
-    wireless:wifi-scripts:netifd
-    wireless:wifi-scripts:ucode
+    wireless:wifi-scripts:*
     wireless:mlo:runtime
     openwrt:hotplug:wifi
 
-package/network/utils/uqmi/*
-package/network/utils/umbim/*
-modemmanager-related package paths
-    cellular:userspace:uqmi
-    cellular:userspace:umbim
-    cellular:userspace:modemmanager
+uqmi/umbim/modemmanager-related paths
+    cellular:userspace:*
     cellular:network:wan-interface
 
 package/kernel/linux/modules/*
     openwrt:package:kernel-modules
-    plus hardware feature implied by module
+    plus implied hardware feature
 
 package/firmware/*
     firmware:*
@@ -782,266 +920,7 @@ include/image-commands.mk
     build:scripts:helper
 ```
 
-## 9.2 Core Migration Feature Set
-
-Use these tags when applicable.
-
-```text
-source:tree:metadata
-source:tree:cleanup
-source:feeds:base-feed-config
-source:feeds:external-feed-config
-
-build:toolchain:config
-build:tools:host-tool
-build:scripts:helper
-build:kernel:config
-build:package:makefile
-
-boot:tf-a:build
-boot:tf-a:bl2
-boot:tf-a:fip
-boot:uboot:build
-boot:uboot:target
-boot:uboot:dts
-boot:uboot:defconfig
-boot:uboot:env
-boot:uboot:bootmenu
-boot:uboot:recovery
-boot:uboot:storage-layout
-boot:recovery:initramfs
-boot:recovery:failsafe
-boot:recovery:factory-install
-
-image:device-recipe
-image:dts-selection
-image:fit
-image:factory-image
-image:sysupgrade-image
-image:device-packages
-
-dts:soc:base
-dts:board:base
-dts:board:variant
-dts:overlay:storage
-dts:overlay:pcie
-dts:overlay:network
-dts:overlay:combo
-dts:overlay:wifi
-dts:overlay:cellular
-dts:gpio:control
-dts:pinctrl:function
-dts:clock-reset:binding
-dts:regulator:power
-dts:nvmem:factory-data
-dts:partition:layout
-dts:led:definition
-dts:button:definition
-dts:thermal:zone
-dts:fan:pwm
-
-storage:emmc:boot
-storage:emmc:rootfs
-storage:sd:boot
-storage:sd:rootfs
-storage:spi-nand:boot
-storage:spi-nand:ubi
-storage:spi-nand:nmbm
-storage:spi-nor:boot
-storage:partition:factory
-storage:partition:fip
-storage:partition:recovery
-storage:partition:rootfs
-storage:factory-data:nvmem
-storage:sysupgrade:platform
-storage:sysupgrade:compatibility
-storage:sysupgrade:backup-restore
-
-identity:mac:ethernet
-identity:mac:wifi
-identity:mac:wwan
-identity:nvmem:factory
-identity:uboot-env:ethaddr
-identity:calibration:wifi
-identity:calibration:phy
-
-network:mac:mtk-eth
-network:pcs:usxgmii
-network:pcs:10gbase-r
-network:mdio:bus
-network:phy:generic
-network:phy:2p5gbase-t
-network:phy:10gbase-t
-network:sfp:cage
-network:sfp:hotplug
-network:dsa:switch
-network:dsa:tagging
-network:dsa:port-map
-network:port-label:lan-wan
-network:default-config:bridge
-network:default-config:wan
-network:vlan:bridge
-network:led:port
-
-network:switch:external-dsa
-network:switch:firmware
-network:switch:port-statistics
-network:switch:vlan-offload
-network:switch:lag
-network:switch:mirror
-network:phy:firmware
-network:phy:multi-rate
-network:phy:led
-network:phy:reset
-network:phy:interrupt
-
-network:combo:static-selection
-network:combo:gpio-mux
-network:combo:sfp-rj45
-network:combo:wan-path
-network:combo:lan-path
-network:combo:runtime-switch
-network:combo:offload-flush
-network:sfp:module-detect
-network:sfp:tx-disable
-network:sfp:i2c
-
-wireless:pcie:nic
-wireless:mt76:driver
-wireless:mt76:firmware
-wireless:mt76:eeprom
-wireless:mac80211:patch
-wireless:hostapd:build
-wireless:hostapd:ucode
-wireless:wifi-scripts:netifd
-wireless:wifi-scripts:ucode
-wireless:mlo:config
-wireless:mlo:runtime
-wireless:regulatory:db
-wireless:calibration:eeprom
-wireless:wed:firmware
-wireless:wed:runtime
-
-cellular:slot:m2-bkey
-cellular:slot:minipcie
-cellular:usb:composition
-cellular:modem:qmi
-cellular:modem:mbim
-cellular:modem:serial
-cellular:modem:firmware
-cellular:sim:interface
-cellular:sim:mux
-cellular:sim:detect
-cellular:power:control
-cellular:reset:control
-cellular:hotplug:wwan
-cellular:userspace:uqmi
-cellular:userspace:umbim
-cellular:userspace:modemmanager
-cellular:network:wan-interface
-
-bus:pcie:controller
-bus:pcie:lane-map
-bus:pcie:reset
-bus:pcie:power
-bus:pcie:hotplug
-bus:usb:controller
-bus:usb:hub
-bus:usb:power
-bus:usb:otg
-bus:i2c:controller
-bus:i2c:mux
-bus:spi:controller
-bus:mdio:controller
-bus:gpio:controller
-
-expansion:nvme:m2-mkey
-expansion:nvme:power
-expansion:nvme:pcie
-expansion:minipcie:wifi
-expansion:minipcie:cellular
-expansion:m2-bkey:cellular
-
-thermal:zone:soc
-thermal:fan:pwm
-thermal:fan:policy
-thermal:cooling-device:binding
-thermal:trip-point:config
-
-ui:led:power
-ui:led:network-port
-ui:led:wifi
-ui:button:reset
-ui:button:wps
-ui:button:bootstrap
-
-firmware:wifi:runtime
-firmware:wifi:eeprom
-firmware:phy:runtime
-firmware:switch:runtime
-firmware:wed:wo
-firmware:cellular:modem
-firmware:boot:blob
-firmware:calibration:factory
-
-accel:ppe:flow-offload
-accel:hnat:nat
-accel:hnat:routing
-accel:wed:wifi-offload
-accel:tops:tunnel-offload
-accel:crypto:eip
-accel:rss:rx-distribution
-accel:lro:rx-aggregation
-accel:switch:vlan-offload
-accel:switch:bridge-offload
-accel:flowtable:nft
-
-openwrt:base-files:board-detect
-openwrt:board-d:network
-openwrt:board-d:leds
-openwrt:uci-defaults:factory
-openwrt:hotplug:network
-openwrt:hotplug:wifi
-openwrt:hotplug:cellular
-openwrt:init:service
-openwrt:package:device-packages
-openwrt:package:kernel-modules
-openwrt:firewall:defaults
-openwrt:network:defaults
-```
-
-## 10. Evidence Requirements
-
-Each record must state evidence.
-
-Good evidence:
-
-```text
-same file path in reference tree
-same patch target in MTK feed
-same content or small semantic diff
-patch-id match
-same compatible string
-same device name
-same board.d case
-same U-Boot target
-same kernel function or driver change
-same upstream commit
-same runtime behavior
-```
-
-Weak evidence:
-
-```text
-similar filename only
-similar directory only
-nearby date only
-vendor naming convention only
-```
-
-Do not assign strong claims from weak evidence.
-
-## 11. Lookup Policy
+## 21. Lookup Policy
 
 Do not inspect every reference repo for every modification.
 
@@ -1049,28 +928,55 @@ Use lookup only when needed.
 
 ```text
 MTK lookup:
-  use mtk-openwrt-feeds, mtk24-vs-openwrt24-base, 8x-vs-mtk24-base, mtk25-vs-openwrt25-base
+    mtk-openwrt-feeds
+    mtk24-vs-openwrt24-base
+    8x-vs-mtk24-base
+    mtk25-vs-openwrt25-base
 
 R4 Pro common lookup:
-  use 4e-vs-mtk24-base and 4E source tree
+    4e-vs-mtk24-base
+    BPI-R4PRO-4E vendor tree
 
 Old R4 / MT7988 lookup:
-  use r4-vs-mtk21-base, R4 vendor tree, OpenWrt 25.12 R4 support
+    r4-vs-mtk21-base
+    BPI-R4 vendor tree
+    OpenWrt 25.12 R4 support
 
-Upstream kernel lookup:
-  use linux-v6.6.104, linux-v6.12.62, linux-v6.12.87, linux-v6.18, linux master
+Linux lookup:
+    linux-v6.6.104
+    linux-v6.12.62
+    linux-v6.12.87
+    linux-v6.18
+    linux master
 
 U-Boot lookup:
-  use upstreams/u-boot
+    upstreams/u-boot
 
 mt76 lookup:
-  use upstreams/mt76
+    upstreams/mt76
 
 Feed package lookup:
-  use mtk21/24/25-packages-patches-feeds when package-level evidence is needed
+    mtk21-packages-patches-feeds
+    mtk24-packages-patches-feeds
+    mtk25-packages-patches-feeds
 ```
 
-## 12. Common Mistakes
+## 22. When Not to Deep-Read
+
+Do not deep-read:
+
+```text
+bulk deleted mac80211 patches
+bulk deleted hostapd patches
+bulk deleted repo metadata
+unrelated target deletions
+non-8X wireless chipset patches
+generated/build/cache files
+```
+
+Unless a cluster specifically depends on them.
+
+## 23. Common Mistakes
 
 Do not analyze all diffsets equally.
 
@@ -1080,7 +986,7 @@ Do not use `mtk-inherited` only because the same file exists in MTK.
 
 Do not use `r4-pro-common` only because 8X and 4E edit the same file.
 
-Do not use `filogic-common` when the similarity is only BPI vendor style.
+Do not use `filogic-common` when similarity is only BPI vendor style.
 
 Do not treat deletion as intentional removal without evidence.
 
@@ -1088,9 +994,36 @@ Do not deeply analyze every mac80211/hostapd deleted patch unless a wireless clu
 
 Do not infer upstream provenance from patch filename alone.
 
+Do not assign migration_feature for `*.patch` based only on the patch file path; inspect inner patch semantics.
+
 Do not convert tags into migration decisions. Decisions belong to cluster analysis.
 
 Do not use minimal change as the guiding principle. A smaller local diff is not better if it preserves the wrong abstraction or hides vendor hacks.
 
+## 24. Final Checklist
 
+Before returning analysis for a file, verify:
 
+```text
+1. Did I identify file status correctly?
+2. If deleted, did I assign deletion_reason?
+3. If modified/added, did I split unrelated semantic changes?
+4. If DTS, did I consider full-file and include context?
+5. If *.patch, did I distinguish outer diff from inner patch semantics?
+6. Did I use tag_rules.md for origin/scope/migration_feature?
+7. Did I cite evidence from available diffsets or source trees?
+8. Did I avoid turning tags into final migration decisions?
+9. Did I record unresolved lookup needs?
+10. Did I avoid minimal-change reasoning?
+```
+
+## 25. Self-Check
+
+Check 1:
+All previous deletion, modification, DTS, patch-file, and reconstruction rules are included.
+
+Check 2:
+Full tag definitions are not duplicated; this skill references tag_rules.md.
+
+Check 3:
+The skill includes source trees, diffsets, output format, decision trees, evidence layers, lookup policy, and common mistakes.
