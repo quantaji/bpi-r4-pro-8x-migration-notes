@@ -106,6 +106,20 @@ Every change should be judged by hardware correctness, OpenWrt 25.12 structure, 
 
 Before accepting each commit, explicitly check whether the commit is following a minimal-change shortcut against the project instructions. If it is, reject or rewrite it unless there is a documented reason to keep the minimal form temporarily.
 
+Every phase review, checkpoint, and commit review must check for unreported minimal-change behavior. If a change or decision used a minimal shortcut without explicitly reporting it, documenting why it was accepted, and assigning a follow-up TODO, the review is incomplete.
+
+Do not use "minimal fix" as an excuse to avoid reading context. Before choosing an implementation strategy, inspect the relevant vendor files, target OpenWrt 25.12 files, feature-routing records, and cluster notes. If the context has not been inspected, the correct action is to inspect it, not to guess a small patch.
+
+Work must be bounded by the current migration objective, but the current objective must still be completed properly. Do not pre-implement the next phase only because it is nearby. Do not under-implement the current phase only because a smaller local change appears to pass an immediate test.
+
+When a minimal or incomplete implementation is forced by missing evidence, hardware access, time, or dependency order, mark it explicitly. The marker must include:
+
+1. what was intentionally left incomplete,
+2. why the minimal form was accepted,
+3. which evidence or test is missing,
+4. which later phase owns the follow-up,
+5. a concrete TODO in the cluster notes, commit message, or known-limitations file.
+
 Temporary minimal changes are allowed only when all of the following are true:
 
 1. The limitation is explicitly documented.
@@ -113,6 +127,7 @@ Temporary minimal changes are allowed only when all of the following are true:
 3. The change is isolated from unrelated clusters.
 4. There is a planned replacement or cleanup path.
 5. The temporary nature is visible in the commit message or cluster notes.
+6. A follow-up TODO names the owning phase and the evidence required to close it.
 
 Do not assume vendor code is correct.
 
@@ -144,6 +159,9 @@ Every commit must answer these questions before it is accepted:
 6. Does the commit mix unrelated clusters?
 7. Does the commit make future migration to OpenWrt main, Linux upstream, or ImmortalWrt harder?
 8. What runtime evidence or test plan validates it?
+9. Which relevant context files were inspected before choosing this implementation?
+10. Does the commit finish the current objective without silently pulling in the next phase?
+11. If the implementation is intentionally minimal or incomplete, where is the TODO and which phase owns it?
 
 A commit that only minimizes local diff size without satisfying the project principles should be rejected.
 
@@ -157,5 +175,3 @@ The project succeeds when the OpenWrt 25.12 implementation is:
 4. testable,
 5. suitable for later ImmortalWrt migration,
 6. free from unjustified minimal-change shortcuts.
-
-
