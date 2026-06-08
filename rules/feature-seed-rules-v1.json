@@ -1,0 +1,1602 @@
+{
+  "version": 1,
+  "purpose": "Mechanical seed rules for Phase 1a feature routing. Rules are cumulative; later review may add or remove assignments.",
+  "rules": [
+    {
+      "id": "repo-metadata",
+      "description": "Repository metadata and housekeeping.",
+      "match": {
+        "path_globs": [
+          ".github/**",
+          ".devcontainer/**",
+          ".gitattributes",
+          ".gitignore",
+          "**/.gitignore",
+          "README.md"
+        ]
+      },
+      "tags": ["source:tree:metadata"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "generated-build-config",
+      "description": "Generated OpenWrt build configuration files.",
+      "match": {
+        "path_globs": [".config", ".config.old"]
+      },
+      "tags": [
+        "build:toolchain:config",
+        "build:kernel:config",
+        "openwrt:package:device-packages"
+      ],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path+file-kind",
+      "needs_review": true,
+      "review_reason": "Build config is a clue only; do not treat it as hardware truth."
+    },
+    {
+      "id": "feeds-conf",
+      "description": "Base feed configuration.",
+      "match": {
+        "path_globs": ["feeds.conf.default"]
+      },
+      "tags": ["source:feeds:base-feed-config"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "kernel-config-menu",
+      "description": "Kernel build configuration menu.",
+      "match": {
+        "path_globs": ["config/Config-kernel.in"]
+      },
+      "tags": ["build:kernel:config"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "package-top-makefile",
+      "description": "OpenWrt package build Makefile integration.",
+      "match": {
+        "path_globs": ["package/Makefile", "package/**/Makefile"]
+      },
+      "tags": ["build:package:makefile"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "host-tools",
+      "description": "OpenWrt host tool build logic.",
+      "match": {
+        "path_globs": ["tools/**"]
+      },
+      "tags": ["build:tools:host-tool"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "scripts-helper",
+      "description": "OpenWrt helper scripts.",
+      "match": {
+        "path_globs": ["scripts/**"]
+      },
+      "tags": ["build:scripts:helper"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": false
+    },
+    {
+      "id": "image-helper",
+      "description": "Image construction helper scripts and commands.",
+      "match": {
+        "path_globs": ["include/image-commands.mk", "scripts/mkits.sh"]
+      },
+      "tags": ["image:fit", "image:sysupgrade-image", "build:scripts:helper"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Image helper changes can affect bootable artifacts."
+    },
+    {
+      "id": "tfa-mediatek",
+      "description": "MediaTek TF-A packaging and boot firmware build.",
+      "match": {
+        "path_globs": ["package/boot/arm-trusted-firmware-mediatek/**"]
+      },
+      "tags": ["boot:tf-a:build", "firmware:boot:blob"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Boot chain files need cluster review."
+    },
+    {
+      "id": "uboot-mediatek",
+      "description": "MediaTek U-Boot package, target, and patches.",
+      "match": {
+        "path_globs": ["package/boot/uboot-mediatek/**"]
+      },
+      "tags": ["boot:uboot:build", "boot:uboot:target"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "U-Boot files need boot cluster review."
+    },
+    {
+      "id": "uboot-patches",
+      "description": "U-Boot patch files may carry DTS, env, bootmenu, recovery, or storage behavior.",
+      "match": {
+        "path_globs": ["package/boot/uboot-mediatek/patches/*.patch"]
+      },
+      "tags": [
+        "boot:uboot:dts",
+        "boot:uboot:env",
+        "boot:uboot:bootmenu",
+        "boot:uboot:recovery",
+        "boot:uboot:storage-layout"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "Inspect inner U-Boot targets before migration."
+    },
+    {
+      "id": "uboot-envtools",
+      "description": "U-Boot environment tools and environment placement.",
+      "match": {
+        "path_globs": ["package/boot/uboot-envtools/**"]
+      },
+      "tags": [
+        "boot:uboot:env",
+        "identity:uboot-env:ethaddr",
+        "storage:sysupgrade:platform"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Environment layout is board/storage sensitive."
+    },
+    {
+      "id": "mediatek-image-recipes",
+      "description": "MediaTek Filogic image recipes and DTS selection.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/image/**"]
+      },
+      "tags": [
+        "image:device-recipe",
+        "image:dts-selection",
+        "image:factory-image",
+        "image:sysupgrade-image",
+        "openwrt:package:device-packages"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Image recipe files define build artifacts and package defaults."
+    },
+    {
+      "id": "board-network-defaults",
+      "description": "OpenWrt board.d network defaults.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/etc/board.d/02_network"]
+      },
+      "tags": [
+        "openwrt:board-d:network",
+        "network:port-label:lan-wan",
+        "network:default-config:bridge",
+        "network:default-config:wan",
+        "network:vlan:bridge",
+        "identity:mac:ethernet"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Network defaults are board-specific and migration critical."
+    },
+    {
+      "id": "board-led-defaults",
+      "description": "OpenWrt board.d LED defaults.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/etc/board.d/01_leds"]
+      },
+      "tags": ["openwrt:board-d:leds", "ui:led:power", "ui:led:network-port", "ui:led:wifi"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "LED defaults depend on board wiring."
+    },
+    {
+      "id": "sysupgrade-platform",
+      "description": "Platform sysupgrade and compatibility behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/lib/upgrade/platform.sh"]
+      },
+      "tags": [
+        "storage:sysupgrade:platform",
+        "storage:sysupgrade:compatibility",
+        "storage:sysupgrade:backup-restore"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Sysupgrade behavior is storage and board critical."
+    },
+    {
+      "id": "base-files-board-detect",
+      "description": "Base-files board detection, uci-defaults, hotplug, and init integration.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/**"]
+      },
+      "tags": ["openwrt:base-files:board-detect"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Base-files changes may be board-specific."
+    },
+    {
+      "id": "dts-files",
+      "description": "Device tree source, include, and overlay files.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"]
+      },
+      "tags": ["dts:board:base", "dts:board:variant"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path+file-kind",
+      "needs_review": true,
+      "review_reason": "DTS files require cluster-level hardware review."
+    },
+    {
+      "id": "dts-storage-keywords",
+      "description": "DTS storage device clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(emmc|sdmmc|sdcard|spim[-_]?nand|spi[-_]?nand|\\bnand\\b|nmbm|\\bubi\\b|spim[-_]?nor|spi[-_]?nor|\\bnor\\b|fixed-partitions|\\bpartition\\b|factory|nvmem)"
+      },
+      "tags": ["dts:overlay:storage"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Storage details require DTS cluster review."
+    },
+    {
+      "id": "dts-partition-keywords",
+      "description": "DTS fixed partition or rootfs layout clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(fixed-partitions|\\bpartition\\b|rootfs|\\bubi\\b|\\bnmbm\\b)"
+      },
+      "tags": ["dts:partition:layout"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Partition layout needs storage review."
+    },
+    {
+      "id": "dts-nvmem-factory-keywords",
+      "description": "DTS factory/nvmem data clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(nvmem|nvmem-cells|nvmem-cell-names|factory|caldata|calibration)"
+      },
+      "tags": [
+        "dts:nvmem:factory-data",
+        "storage:factory-data:nvmem"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Factory/nvmem data needs board-level review."
+    },
+    {
+      "id": "dts-identity-nvmem-keywords",
+      "description": "DTS factory/nvmem/MAC-address identity clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(nvmem-cell-names\\s*=\\s*\"mac-address\"|mac-address|gmac[0-9_]*mac|factory.*mac|mac.*factory)"
+      },
+      "tags": [
+        "identity:nvmem:factory",
+        "identity:mac:ethernet",
+        "storage:factory-data:nvmem"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "DTS identity/nvmem routing needs board-level review."
+    },
+    {
+      "id": "dts-network-keywords",
+      "description": "DTS network topology clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(ethernet|\\beth[0-9]?\\b|mdio|sfp|usxgmii|sgmii|10g|aqr|as21|an88|mxl|dsa|gsw|switch|combo|cux|phy-handle|phy-mode)"
+      },
+      "tags": ["dts:overlay:network"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Network topology requires DTS and wired-network cluster review."
+    },
+    {
+      "id": "dts-mdio-keywords",
+      "description": "DTS MDIO bus clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(\\bmdio\\b|mdio-bus|mdio[0-9])"
+      },
+      "tags": ["network:mdio:bus"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "MDIO topology needs wired-network review."
+    },
+    {
+      "id": "dts-network-phy-keywords",
+      "description": "DTS Ethernet PHY and multi-rate link clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(ethernet-phy|phy-handle|phy-mode|usxgmii|sgmii|xgmii|2500base|2p5g|10g|aqr|as21|an88|mxl|cux)"
+      },
+      "tags": ["network:phy:multi-rate"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Ethernet PHY topology needs wired-network review."
+    },
+    {
+      "id": "dts-sfp-keywords",
+      "description": "DTS SFP cage, detect GPIO, and SFP I2C clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(\\bsfp\\b|sff,sfp|sfp@|mod-def|tx-disable|los-gpio|sfp.*i2c|i2c.*sfp)"
+      },
+      "tags": [
+        "dts:overlay:network",
+        "network:sfp:cage",
+        "network:sfp:i2c",
+        "network:sfp:module-detect"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "SFP DTS behavior needs wired-network review."
+    },
+    {
+      "id": "dts-10g-phy-keywords",
+      "description": "DTS 10G PHY, Aquantia, CUX3410, or AS21xxx clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(aqr|aquantia|cux3410|as21|10gphy|10gbase-t|firmware-name)"
+      },
+      "tags": [
+        "network:phy:10gbase-t",
+        "network:phy:multi-rate"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "10G PHY DTS behavior needs wired-network review."
+    },
+    {
+      "id": "dts-phy-firmware-keywords",
+      "description": "DTS PHY firmware-name clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(firmware-name\\s*=\\s*\"[^\"]*(aqr|as21|cux|phy|fw)|request-firmware)"
+      },
+      "tags": ["firmware:phy:runtime"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "PHY firmware reference needs wired-network review."
+    },
+    {
+      "id": "dts-mxl-switch-keywords",
+      "description": "DTS MaxLinear switch and DSA tagging clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(mxl862|dsa-tag|dsa.*mxl|mxl.*dsa)"
+      },
+      "tags": [
+        "network:dsa:switch",
+        "network:dsa:tagging",
+        "network:switch:external-dsa"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "MxL/DSA DTS behavior needs wired-network review."
+    },
+    {
+      "id": "dts-combo-keywords",
+      "description": "DTS SFP/RJ45 combo clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(combo|sfp.*rj45|rj45.*sfp|sfp.*mux|rj45.*mux|gpio[-_]?mux)"
+      },
+      "tags": [
+        "dts:overlay:combo",
+        "network:combo:sfp-rj45",
+        "network:combo:gpio-mux"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Combo behavior needs dedicated wired-network review."
+    },
+    {
+      "id": "dts-pcie-keywords",
+      "description": "DTS PCIe slot/controller clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(pcie|pci-express|m\\.2|m2|mini[-_]?pcie)"
+      },
+      "tags": ["dts:overlay:pcie", "bus:pcie:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "PCIe slot/controller behavior needs hardware review."
+    },
+    {
+      "id": "dts-wifi-keywords",
+      "description": "DTS Wi-Fi device or slot clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(wifi|wmac|mt799|be14|be19)"
+      },
+      "tags": ["dts:overlay:wifi", "wireless:pcie:nic"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Wi-Fi slot/device behavior needs hardware review."
+    },
+    {
+      "id": "dts-cellular-keywords",
+      "description": "DTS cellular, SIM, modem, or WWAN clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(\\bsim[0-9]*\\b|sim[-_]|[-_]sim|wwan|modem|qmi|mbim|b-key|bkey|key-b|m\\.2-b|m2-b|m\\.2 key-b|m2 key-b|mpcie.*sim|usb.*modem)"
+      },
+      "tags": [
+        "dts:overlay:cellular",
+        "cellular:slot:m2-bkey",
+        "cellular:slot:minipcie",
+        "cellular:sim:interface",
+        "expansion:m2-bkey:cellular",
+        "expansion:minipcie:cellular"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Cellular/SIM behavior needs cluster review."
+    },
+    {
+      "id": "dts-led-keywords",
+      "description": "DTS LED clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(gpio-leds|compatible\\s*=\\s*\"gpio-leds\"|\\bleds\\s*\\{)"
+      },
+      "tags": ["dts:led:definition"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "LED keyword routing may over-tag exact LED role."
+    },
+    {
+      "id": "dts-power-led-keywords",
+      "description": "DTS power LED clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(label\\s*=\\s*\"[^\"]*power|function\\s*=\\s*<LED_FUNCTION_POWER>|\"power\")"
+      },
+      "tags": ["ui:led:power"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Power LED role needs board-level review."
+    },
+    {
+      "id": "dts-button-keywords",
+      "description": "DTS button/input clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(gpio-keys|\\bbuttons?\\s*\\{|button-[a-z0-9_-]*\\s*\\{|reset-key|reset-button|\\bwps\\b|KEY_WPS_BUTTON|KEY_RESTART)"
+      },
+      "tags": ["dts:button:definition"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Button keyword routing may over-tag exact button role."
+    },
+    {
+      "id": "dts-reset-button-keywords",
+      "description": "DTS reset button clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(reset-key|reset-button|KEY_RESTART)"
+      },
+      "tags": ["ui:button:reset"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Reset button role needs board-level review."
+    },
+    {
+      "id": "dts-wps-button-keywords",
+      "description": "DTS WPS button clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(\\bwps\\b|KEY_WPS_BUTTON)"
+      },
+      "tags": ["ui:button:wps"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "WPS button role needs board-level review."
+    },
+    {
+      "id": "dts-thermal-fan-keywords",
+      "description": "DTS thermal zone clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(thermal-zones|thermal-zone|\\bthermal\\b|cooling-maps|cooling-levels)"
+      },
+      "tags": ["dts:thermal:zone"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Thermal keyword routing may over-tag exact thermal role."
+    },
+    {
+      "id": "dts-fan-keywords",
+      "description": "DTS fan/PWM fan clues.",
+      "match": {
+        "file_kinds": ["dts", "dtsi", "dtso"],
+        "text_regex": "(?i)(pwm-fan|\\bfan\\s*\\{|fan[0-9_-]|cooling-levels)"
+      },
+      "tags": [
+        "dts:fan:pwm",
+        "thermal:fan:pwm"
+      ],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Fan keyword routing may over-tag exact fan role."
+    },
+    {
+      "id": "mediatek-kernel-patches",
+      "description": "MediaTek target kernel patches with unknown inner target.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/**/*.patch", "target/linux/mediatek/patches-*/*.patch"]
+      },
+      "tags": ["dts:soc:base"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Use inner patch target paths to refine feature routing."
+    },
+    {
+      "id": "kernel-patch-dts-targets",
+      "description": "Kernel patch touches DTS or bindings.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^arch/arm64/boot/dts|^include/dt-bindings|^Documentation/devicetree|\\bdevicetree\\b|\\bdts\\b)"
+      },
+      "tags": ["dts:soc:base", "dts:board:base", "dts:clock-reset:binding"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "DTS/binding kernel patches require cluster review."
+    },
+    {
+      "id": "kernel-patch-phy-targets",
+      "description": "Kernel patch touches PHY, MDIO, or phylink code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/phy/|^drivers/phy/|^include/linux/(phy|phylink)|\\bphylink\\b|\\bnet[-_ ]phy\\b|\\b2p5g\\b|\\b10gbase\\b|\\bEEE\\b.*\\bphy\\b|\\bphy\\b.*\\bEEE\\b)"
+      },
+      "tags": [
+        "network:phy:generic",
+        "network:phy:multi-rate"
+      ],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "PHY/PCS patches are wired-network critical."
+    },
+    {
+      "id": "kernel-patch-10g-phy-targets",
+      "description": "Kernel patch touches 10G PHY, Aquantia, CUX3410, or AS21xxx behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/phy/(aquantia|aqr|cux|as21|air_en8811h|en8811h)|\\baqr\\b|\\baquantia\\b.*\\bphy\\b|\\bcux3410\\b|\\bas21\\b|\\b10gphy\\b|\\b10gbase-t\\b)"
+      },
+      "tags": [
+        "network:phy:10gbase-t",
+        "network:phy:multi-rate"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "10G PHY patches need wired-network review."
+    },
+    {
+      "id": "kernel-patch-sfp-targets",
+      "description": "Kernel patch touches SFP module detection, SFP GPIOs, or SFP cage behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/phy/sfp|\\bsfp\\b|mod-def|tx-disable|los-gpio|sff,sfp)"
+      },
+      "tags": [
+        "network:sfp:cage",
+        "network:sfp:hotplug",
+        "network:sfp:module-detect",
+        "network:sfp:i2c"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "SFP patches need wired-network review."
+    },
+    {
+      "id": "kernel-patch-combo-targets",
+      "description": "Kernel patch touches SFP/RJ45 combo or mux behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?i)(combo|sfp.*rj45|rj45.*sfp|sfp.*mux|passive mux|dynamic switching|sfp/phy)"
+      },
+      "tags": [
+        "network:combo:sfp-rj45",
+        "network:combo:gpio-mux",
+        "network:combo:runtime-switch"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "SFP/RJ45 combo behavior needs dedicated wired-network review."
+    },
+    {
+      "id": "kernel-patch-pcs-targets",
+      "description": "Kernel patch touches PCS or SerDes mode handling.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/pcs/|mtk[-_]?pcs|mtk[-_]?lynxi|\\blynxi\\b|\\busxgmii\\b|\\b10gbase-r\\b|sgmiipcs|usxgmiisys)"
+      },
+      "tags": [
+        "network:pcs:usxgmii",
+        "network:pcs:10gbase-r"
+      ],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "PCS patches are wired-network critical."
+    },
+    {
+      "id": "kernel-patch-dsa-switch-targets",
+      "description": "Kernel patch touches DSA or switch code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/dsa/|^net/dsa/|tag_.*mxl|mxl862|\\bdsa\\b|mt753)"
+      },
+      "tags": [
+        "network:dsa:switch",
+        "network:dsa:tagging",
+        "network:switch:external-dsa",
+        "network:switch:vlan-offload"
+      ],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "Switch/DSA patches are wired-network critical."
+    },
+    {
+      "id": "kernel-patch-mtk-eth-targets",
+      "description": "Kernel patch touches MediaTek Ethernet MAC code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/ethernet/mediatek/|mtk_eth|mtk_eth_soc)"
+      },
+      "tags": ["network:mac:mtk-eth"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "MediaTek Ethernet patches need wired-network review."
+    },
+    {
+      "id": "kernel-patch-ppe-flow-targets",
+      "description": "Kernel patch touches PPE or flow offload code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?i)(\\bppe\\b|flow[-_]?offload|flowtable|\\brss\\b|\\blro\\b)"
+      },
+      "tags": ["accel:ppe:flow-offload"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "PPE/flow offload belongs after basic network correctness."
+    },
+    {
+      "id": "kernel-patch-hnat-targets",
+      "description": "Kernel patch touches HNAT code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?i)(\\bhnat\\b|mtkhnat)"
+      },
+      "tags": ["accel:hnat:nat", "accel:hnat:routing"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "HNAT acceleration belongs late in migration order."
+    },
+    {
+      "id": "kernel-patch-tops-targets",
+      "description": "Kernel patch touches TOPS offload code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?i)(\\btops\\b|tunnel[-_]?offload)"
+      },
+      "tags": ["accel:tops:tunnel-offload"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "TOPS offload belongs late in migration order."
+    },
+    {
+      "id": "kernel-patch-wed-targets",
+      "description": "Kernel patch touches WED Wi-Fi offload code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?i)(mtk[-_]?wed|CONFIG_MTK_WED|wed_enable|warp|wifi[-_ ]?offload|wo[_-])"
+      },
+      "tags": ["accel:wed:wifi-offload"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "WED/offload belongs late in migration order."
+    },
+    {
+      "id": "kernel-patch-storage-targets",
+      "description": "Kernel patch touches MTD, UBI, NMBM, NAND, NOR, or partition code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/mtd/|^fs/(ubifs|jffs2)/|\\bnmbm\\b|\\bubi\\b|\\brootfs\\b|\\bsysupgrade\\b|\\bpartition\\b)"
+      },
+      "tags": [],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "Storage patch matched broad storage clues; precise storage tags are seeded by narrower rules."
+    },
+    {
+      "id": "kernel-patch-storage-spi-nand-targets",
+      "description": "Kernel patch touches SPI-NAND or NAND boot/storage support.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/mtd/nand/|^drivers/mtd/.*spi.*nand|^drivers/spi/.*nand|\\bONFI\\b|\\bCASN\\b)"
+      },
+      "tags": ["storage:spi-nand:boot"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "SPI-NAND/NAND patches affect boot and storage media support."
+    },
+    {
+      "id": "kernel-patch-storage-spi-nor-targets",
+      "description": "Kernel patch touches SPI-NOR or NOR boot/storage support.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/mtd/spi-nor/|\\bspi[-_]?nor\\b|\\bnor\\b)"
+      },
+      "tags": ["storage:spi-nor:boot"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "SPI-NOR/NOR patches affect boot and storage media support."
+    },
+    {
+      "id": "kernel-patch-storage-ubi-rootfs-targets",
+      "description": "Kernel patch touches UBI, UBIFS, rootfs, or root device behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(\\bubi\\b|ubifs|rootdev|rootfs)"
+      },
+      "tags": ["storage:spi-nand:ubi", "storage:partition:rootfs"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "UBI/rootfs patches affect boot and sysupgrade behavior."
+    },
+    {
+      "id": "kernel-patch-storage-nmbm-targets",
+      "description": "Kernel patch touches NMBM behavior.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)\\bnmbm\\b"
+      },
+      "tags": ["storage:spi-nand:nmbm"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "NMBM patches affect SPI-NAND storage layout."
+    },
+    {
+      "id": "kernel-patch-usb-targets",
+      "description": "Kernel patch touches USB bus/controller code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/usb/|\\bxhci\\b|\\bmtk-xhci\\b)"
+      },
+      "tags": ["bus:usb:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "USB bus/controller patches need bus review."
+    },
+    {
+      "id": "kernel-patch-pcie-targets",
+      "description": "Kernel patch touches PCIe bus/controller code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/pci/|\\bpcie[-_]?mediatek\\b|\\bpci[-_]?express\\b|\\bpcie\\b.*\\b(controller|link|port|mtk|mediatek)\\b)"
+      },
+      "tags": ["bus:pcie:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "PCIe bus/controller patches need bus review."
+    },
+    {
+      "id": "kernel-patch-i2c-targets",
+      "description": "Kernel patch touches I2C bus/controller code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/i2c/|\\bi2c[-_ ]?(controller|mtk|mediatek)\\b)"
+      },
+      "tags": ["bus:i2c:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "I2C bus/controller patches need bus review."
+    },
+    {
+      "id": "kernel-patch-spi-targets",
+      "description": "Kernel patch touches SPI bus/controller code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/spi/|^drivers/mtd/nand/spi/|\\bspi[-_ ]?(controller|mtk|mediatek)\\b)"
+      },
+      "tags": ["bus:spi:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "SPI bus/controller patches need bus review."
+    },
+    {
+      "id": "kernel-patch-gpio-targets",
+      "description": "Kernel patch touches GPIO controller or GPIO control code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/gpio/|\\bgpio[-_ ]?(controller|chip|mtk|mediatek)\\b)"
+      },
+      "tags": ["bus:gpio:controller"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "GPIO bus/controller patches need bus review."
+    },
+    {
+      "id": "kernel-patch-mdio-targets",
+      "description": "Kernel patch touches MDIO bus/controller code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/net/mdio/|^include/linux/mdio/|\\bmdio[-_ ]?(bus|controller|mtk|mediatek)\\b)"
+      },
+      "tags": ["bus:mdio:controller", "network:mdio:bus"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "MDIO bus/controller patches need wired-network review."
+    },
+    {
+      "id": "kernel-patch-crypto-targets",
+      "description": "Kernel patch touches crypto/EIP acceleration.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/patches-*/*.patch"],
+        "text_scope": ["path", "patch_subjects", "patch_targets"],
+        "text_regex": "(?im)(^drivers/crypto/|\\bcrypto\\b|\\beip\\b|safexcel)"
+      },
+      "tags": ["accel:crypto:eip"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-inner-target",
+      "needs_review": true,
+      "review_reason": "Crypto acceleration belongs late in migration order."
+    },
+    {
+      "id": "mediatek-files-phy-drivers",
+      "description": "Added or modified PHY driver sources.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/files-*/drivers/net/phy/**",
+          "target/linux/mediatek/files-*/drivers/phy/**"
+        ]
+      },
+      "tags": [
+        "network:phy:generic",
+        "network:phy:multi-rate"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "PHY driver files are wired-network critical."
+    },
+    {
+      "id": "mediatek-files-10g-phy-drivers",
+      "description": "Added or modified 10G PHY driver sources.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/files-*/drivers/net/phy/**",
+          "target/linux/mediatek/files-*/drivers/phy/**"
+        ],
+        "text_scope": ["path"],
+        "text_regex": "(?i)(aqr|aquantia|cux|as21|10g|en8811h)"
+      },
+      "tags": ["network:phy:10gbase-t"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "10G PHY driver files need wired-network review."
+    },
+    {
+      "id": "mediatek-files-phy-firmware-use",
+      "description": "PHY driver sources that reference runtime firmware loading.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/files-*/drivers/net/phy/**",
+          "target/linux/mediatek/files-*/drivers/phy/**"
+        ],
+        "text_scope": ["path", "patch_content"],
+        "text_regex": "(?i)(request_firmware|firmware-name|\\.cld|\\.bin|aqr|aquantia|cux3410|as21)"
+      },
+      "tags": ["firmware:phy:runtime"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "PHY firmware loading needs wired-network review."
+    },
+    {
+      "id": "mediatek-files-dsa-switch",
+      "description": "Added or modified DSA/switch driver sources.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/files-*/drivers/net/dsa/**",
+          "target/linux/mediatek/files-*/net/dsa/**"
+        ]
+      },
+      "tags": [
+        "network:dsa:switch",
+        "network:dsa:tagging",
+        "network:switch:external-dsa"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "DSA/switch driver files are wired-network critical."
+    },
+    {
+      "id": "mediatek-files-ethernet",
+      "description": "Added or modified MediaTek Ethernet driver sources.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/files-*/drivers/net/ethernet/**"]
+      },
+      "tags": ["network:mac:mtk-eth"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Ethernet driver files are wired-network critical."
+    },
+    {
+      "id": "mediatek-files-ethernet-ppe",
+      "description": "MediaTek Ethernet driver sources with PPE/flow offload clues.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/files-*/drivers/net/ethernet/**"],
+        "text_scope": ["path", "patch_content"],
+        "text_regex": "(?i)(\\bppe\\b|\\bfoe\\b|flow[-_]?offload|\\brss\\b|\\blro\\b)"
+      },
+      "tags": ["accel:ppe:flow-offload"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "PPE/flow offload needs acceleration review."
+    },
+    {
+      "id": "mediatek-files-usb",
+      "description": "Added or modified USB host/controller sources.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/files-*/drivers/usb/**"]
+      },
+      "tags": ["bus:usb:controller"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "USB controller behavior may affect expansion and cellular devices."
+    },
+    {
+      "id": "phy-firmware-packages",
+      "description": "10G PHY packages and PHY firmware blobs.",
+      "match": {
+        "path_globs": [
+          "package/kernel/as21xxx/**",
+          "package/kernel/aqr10g-phy-fw/**"
+        ]
+      },
+      "tags": [
+        "network:phy:10gbase-t",
+        "network:phy:multi-rate",
+        "network:phy:firmware",
+        "firmware:phy:runtime",
+        "identity:calibration:phy"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "PHY firmware/package behavior is hardware-specific."
+    },
+    {
+      "id": "kernel-module-definitions",
+      "description": "OpenWrt kernel module package definitions.",
+      "match": {
+        "path_globs": ["package/kernel/linux/modules/**"]
+      },
+      "tags": ["openwrt:package:kernel-modules"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Module definitions need feature-specific review."
+    },
+    {
+      "id": "mt76-stack",
+      "description": "mt76 driver tree, patches, and supporting files.",
+      "match": {
+        "path_globs": ["package/kernel/mt76/**"]
+      },
+      "tags": ["wireless:mt76:driver"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "mt76 changes need wireless cluster review."
+    },
+    {
+      "id": "mt76-firmware",
+      "description": "mt76 runtime firmware blobs.",
+      "match": {
+        "path_globs": [
+          "package/kernel/mt76/src/firmware/**",
+          "package/kernel/mt76/Makefile"
+        ],
+        "text_regex": "(?i)(firmware|\\.bin|rom_patch|_wm|_wa|_dsp)"
+      },
+      "tags": ["wireless:mt76:firmware", "firmware:wifi:runtime"],
+      "role": "secondary",
+      "confidence": "high",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Firmware file selection needs wireless cluster review."
+    },
+    {
+      "id": "mt76-eeprom",
+      "description": "mt76 EEPROM/calibration blobs or handling.",
+      "match": {
+        "path_globs": ["package/kernel/mt76/**"],
+        "text_regex": "(?i)(eeprom|calibration|caldata|precal)"
+      },
+      "tags": [
+        "wireless:mt76:eeprom",
+        "wireless:calibration:eeprom",
+        "firmware:wifi:eeprom",
+        "identity:calibration:wifi"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Wi-Fi EEPROM/calibration handling is board-specific."
+    },
+    {
+      "id": "mt76-wed",
+      "description": "mt76 WED/offload clues.",
+      "match": {
+        "path_globs": ["package/kernel/mt76/**"],
+        "text_regex": "(mtk[-_]?wed|MTK_WED|\\bWED\\b|wed[_-]|[_-]wed|warp|offload|wo[_-])"
+      },
+      "tags": ["wireless:wed:runtime", "firmware:wed:wo", "accel:wed:wifi-offload"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "WED/offload belongs late in migration order."
+    },
+    {
+      "id": "mac80211-stack",
+      "description": "mac80211 package, patches, and backports.",
+      "match": {
+        "path_globs": ["package/kernel/mac80211/**"]
+      },
+      "tags": ["wireless:mac80211:patch"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Bulk mac80211 changes should be reviewed by wireless cluster."
+    },
+    {
+      "id": "wireless-regulatory",
+      "description": "Wireless regulatory database or regdomain changes.",
+      "match": {
+        "path_globs": [
+          "package/firmware/wireless-regdb/**",
+          "package/kernel/mac80211/**"
+        ],
+        "text_regex": "(?i)(regdb|regulatory|regd|country|6ghz|unii)"
+      },
+      "tags": ["wireless:regulatory:db"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Regulatory behavior requires careful review."
+    },
+    {
+      "id": "hostapd-stack",
+      "description": "hostapd package, patches, source overlay, and build integration.",
+      "match": {
+        "path_globs": ["package/network/services/hostapd/**"]
+      },
+      "tags": ["wireless:hostapd:build"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "hostapd patch stack is large and needs wireless cluster review."
+    },
+    {
+      "id": "hostapd-ucode-runtime",
+      "description": "hostapd ucode/ubus runtime integration.",
+      "match": {
+        "path_globs": [
+          "package/network/services/hostapd/files/**",
+          "package/network/services/hostapd/src/**"
+        ],
+        "text_regex": "(?i)(ucode|ubus|uloop|hostapd\\.uc|wpa_supplicant\\.uc)"
+      },
+      "tags": ["wireless:hostapd:ucode"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "hostapd ucode/ubus behavior affects runtime control."
+    },
+    {
+      "id": "hostapd-mlo",
+      "description": "hostapd MLO/802.11be clues.",
+      "match": {
+        "path_globs": ["package/network/services/hostapd/**"],
+        "text_regex": "(?i)(mlo|multi-link|802\\.11be|11be|eml|ml_probe|ap_mld)"
+      },
+      "tags": ["wireless:mlo:config", "wireless:mlo:runtime"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "patch-content-keyword",
+      "needs_review": true,
+      "review_reason": "MLO behavior needs wireless cluster review."
+    },
+    {
+      "id": "wifi-scripts",
+      "description": "OpenWrt Wi-Fi scripts and netifd/ucode integration.",
+      "match": {
+        "path_globs": ["package/network/config/wifi-scripts/**"]
+      },
+      "tags": [
+        "wireless:wifi-scripts:netifd",
+        "wireless:wifi-scripts:ucode",
+        "wireless:mlo:runtime",
+        "openwrt:hotplug:wifi"
+      ],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Wi-Fi scripts affect runtime device setup."
+    },
+    {
+      "id": "iw-wireless-utils",
+      "description": "iw utility patches and nl80211 sync.",
+      "match": {
+        "path_globs": ["package/network/utils/iw/**"]
+      },
+      "tags": ["wireless:mac80211:patch"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "iw changes may track nl80211/mac80211 feature exposure."
+    },
+    {
+      "id": "network-default-packages",
+      "description": "Generic OpenWrt network service defaults.",
+      "match": {
+        "path_globs": [
+          "package/network/config/netifd/**",
+          "package/network/services/dnsmasq/**"
+        ]
+      },
+      "tags": ["openwrt:network:defaults"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Generic network changes may be baseline mismatch or policy."
+    },
+    {
+      "id": "target-network-config-defaults",
+      "description": "Target base network config defaults.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/etc/config/network"]
+      },
+      "tags": ["openwrt:network:defaults"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Target network config needs runtime-default review."
+    },
+    {
+      "id": "target-firewall-config-defaults",
+      "description": "Target base firewall config defaults.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/**/base-files/etc/config/firewall"]
+      },
+      "tags": ["openwrt:firewall:defaults"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Target firewall config needs runtime-default review."
+    },
+    {
+      "id": "target-wwan-config-defaults",
+      "description": "Target base network/firewall config contains WWAN defaults.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/**/base-files/etc/config/network",
+          "target/linux/mediatek/**/base-files/etc/config/firewall"
+        ],
+        "text_regex": "(?i)(\\bwwan\\b|wwan0|qmi|mbim|modem)"
+      },
+      "tags": ["cellular:network:wan-interface"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "WWAN defaults need cellular/network review."
+    },
+    {
+      "id": "flowtable-netfilter-support",
+      "description": "Flowtable, netfilter, or nft-related package/library support.",
+      "match": {
+        "path_globs": [
+          "package/libs/libnfnetlink/**",
+          "package/kernel/linux/modules/netfilter.mk",
+          "package/network/**"
+        ],
+        "text_regex": "(?i)(flowtable|nft|netfilter|nfnetlink)"
+      },
+      "tags": ["accel:flowtable:nft"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Flowtable/netfilter changes affect network defaults and acceleration."
+    },
+    {
+      "id": "cellular-userspace",
+      "description": "Cellular userspace packages and modem support clues.",
+      "match": {
+        "path_globs": [
+          "package/network/utils/uqmi/**",
+          "package/network/utils/umbim/**",
+          "package/network/utils/modemmanager/**"
+        ],
+        "text_regex": "(?i)(uqmi|umbim|modemmanager|wwan|qmi|mbim|\\bsim\\b|sim[-_]|[-_]sim|quectel|mhi|cdc-wdm)"
+      },
+      "tags": [
+        "cellular:userspace:uqmi",
+        "cellular:userspace:umbim",
+        "cellular:userspace:modemmanager",
+        "cellular:network:wan-interface"
+      ],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "Cellular keyword routing may over-tag."
+    },
+    {
+      "id": "optee-mediatek",
+      "description": "MediaTek OP-TEE package and boot firmware support.",
+      "match": {
+        "path_globs": ["package/mtk/optee-mediatek/**"]
+      },
+      "tags": ["boot:tf-a:build", "firmware:boot:blob"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "OP-TEE handling belongs to boot chain review."
+    },
+    {
+      "id": "misc-mtk-packages",
+      "description": "Miscellaneous MTK package sources and support utilities.",
+      "match": {
+        "path_globs": ["package/mtk/**"]
+      },
+      "tags": ["openwrt:package:device-packages"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Miscellaneous MTK package needs feature-specific review."
+    },
+    {
+      "id": "reset-boot-count",
+      "description": "Boot count reset service/package.",
+      "match": {
+        "path_globs": ["package/mtk/reset-boot-count/**"]
+      },
+      "tags": ["boot:recovery:failsafe", "openwrt:init:service"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Boot count behavior belongs to recovery review."
+    },
+    {
+      "id": "wifi-firmware-binary-files",
+      "description": "Wi-Fi firmware/blob files listed by the diffset.",
+      "match": {
+        "binary": true,
+        "path_globs": [
+          "package/kernel/mt76/**",
+          "package/firmware/**"
+        ],
+        "text_scope": ["path"],
+        "text_regex": "(?i)(firmware|\\.bin|\\.cld|rom_patch|eeprom|fw)"
+      },
+      "tags": ["firmware:wifi:runtime"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "binary-path",
+      "needs_review": true,
+      "review_reason": "Wi-Fi binary firmware needs package-specific classification."
+    },
+    {
+      "id": "fstools-storage-boot",
+      "description": "fstools storage, rootfs, overlay, and dual-boot support.",
+      "match": {
+        "path_globs": ["package/system/fstools/**"],
+        "text_regex": "(?i)(dual[-_ ]?boot|rootfs|overlay|ubi|partition|sysupgrade)"
+      },
+      "tags": [
+        "storage:sysupgrade:platform",
+        "storage:partition:rootfs",
+        "boot:recovery:factory-install"
+      ],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+keywords",
+      "needs_review": true,
+      "review_reason": "fstools storage behavior affects boot and sysupgrade."
+    },
+    {
+      "id": "generic-init-services",
+      "description": "Init scripts and service entry points.",
+      "match": {
+        "path_regex": "(^|/)(init\\.d|[^/]+\\.init)$"
+      },
+      "tags": ["openwrt:init:service"],
+      "role": "secondary",
+      "confidence": "medium",
+      "evidence_level": "path+file-kind",
+      "needs_review": true,
+      "review_reason": "Init services need cluster-specific classification."
+    },
+    {
+      "id": "target-kernel-config",
+      "description": "OpenWrt target kernel config and target makefile.",
+      "match": {
+        "path_globs": [
+          "target/linux/*/config-*",
+          "target/linux/*/target.mk"
+        ]
+      },
+      "tags": ["build:kernel:config"],
+      "role": "primary",
+      "confidence": "medium",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Target config must be reviewed with target bring-up."
+    },
+    {
+      "id": "mediatek-clock-reset-files",
+      "description": "MediaTek clock and reset controller sources or bindings.",
+      "match": {
+        "path_globs": [
+          "target/linux/mediatek/files-*/drivers/clk/mediatek/**",
+          "target/linux/mediatek/files-*/include/dt-bindings/clock/**",
+          "target/linux/mediatek/files-*/include/dt-bindings/reset/**"
+        ]
+      },
+      "tags": ["dts:soc:base", "dts:clock-reset:binding"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Clock/reset files belong to SoC base hardware review."
+    },
+    {
+      "id": "mediatek-pinctrl-files",
+      "description": "MediaTek pinctrl and GPIO controller sources.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/files-*/drivers/pinctrl/mediatek/**"]
+      },
+      "tags": ["dts:soc:base", "dts:pinctrl:function", "bus:gpio:controller"],
+      "role": "primary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Pinctrl files belong to SoC base hardware review."
+    },
+    {
+      "id": "mediatek-ra-nat-header",
+      "description": "RA NAT/HNAT header or related networking acceleration code.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/files-*/include/net/ra_nat.h"]
+      },
+      "tags": ["accel:hnat:nat", "accel:hnat:routing"],
+      "role": "secondary",
+      "confidence": "high",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "HNAT acceleration belongs late in migration order."
+    },
+    {
+      "id": "target-base-files-scripts",
+      "description": "Target base-files scripts and init integration not covered by board.d/sysupgrade rules.",
+      "match": {
+        "path_globs": ["target/linux/mediatek/base-files/**"]
+      },
+      "tags": ["openwrt:init:service", "openwrt:base-files:board-detect"],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path",
+      "needs_review": true,
+      "review_reason": "Target base-files scripts need cluster-specific classification."
+    },
+    {
+      "id": "rename-copy-needs-review",
+      "description": "Renamed or copied files require review because path movement can affect patch order or build behavior.",
+      "match": {
+        "status_prefixes": ["R", "C"]
+      },
+      "tags": [],
+      "role": "secondary",
+      "confidence": "low",
+      "evidence_level": "path+status",
+      "needs_review": true,
+      "review_reason": "Rename/copy status requires review even when feature tags are seeded."
+    }
+  ]
+}

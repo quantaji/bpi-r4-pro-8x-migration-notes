@@ -1,3 +1,15 @@
+# Archived Legacy Semantic Tagging Skill
+
+Archived on 2026-06-08.
+
+This skill is not used for the current Phase 1a feature-routing pass. Phase 1a
+now routes files by `feature_tags` only, using `feature_routing_skill.md`,
+`rules/feature-tags-v1.json`, and `rules/feature-seed-rules-v1.json`.
+
+The semantic workflow below is retained only as legacy reference for later
+feature-cluster review, where origin, scope, applicability, and migration design
+can be evaluated with more evidence.
+
 # Diff File Analysis Skill
 
 ## 1. Purpose

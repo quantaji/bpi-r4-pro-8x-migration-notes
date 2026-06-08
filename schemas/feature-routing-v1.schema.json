@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Phase 1a Feature Routing Record",
+  "description": "Schema for records emitted by Phase 1a feature routing. origin, scope, and mtk_version are intentionally forbidden.",
+  "oneOf": [
+    { "$ref": "#/definitions/file_record" },
+    { "$ref": "#/definitions/assignment_record" }
+  ],
+  "definitions": {
+    "feature_tag": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+:[a-z0-9-]+:[a-z0-9-]+$"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "evidence_level": {
+      "type": "string",
+      "enum": [
+        "path",
+        "path+status",
+        "path+file-kind",
+        "path+keywords",
+        "patch-subject",
+        "patch-inner-target",
+        "patch-content-keyword",
+        "binary-path",
+        "manual-review"
+      ]
+    },
+    "file_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "file_id",
+        "diffset",
+        "status",
+        "old_path",
+        "new_path",
+        "effective_path",
+        "file_kind",
+        "is_binary",
+        "feature_tags",
+        "confidence",
+        "needs_review"
+      ],
+      "properties": {
+        "record_type": { "const": "file" },
+        "file_id": { "type": "string", "pattern": "^[0-9]{6}$" },
+        "diffset": { "type": "string" },
+        "status": { "type": "string" },
+        "old_path": { "type": ["string", "null"] },
+        "new_path": { "type": ["string", "null"] },
+        "effective_path": { "type": "string" },
+        "file_kind": { "type": "string" },
+        "is_binary": { "type": "boolean" },
+        "numstat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["added", "deleted"],
+          "properties": {
+            "added": { "type": ["integer", "null"] },
+            "deleted": { "type": ["integer", "null"] }
+          }
+        },
+        "feature_tags": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature_tag" },
+          "uniqueItems": true
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "evidence_levels": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/evidence_level" },
+          "uniqueItems": true
+        },
+        "needs_review": { "type": "boolean" },
+        "review_reasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["origin"] },
+          { "required": ["scope"] },
+          { "required": ["mtk_version"] },
+          { "required": ["deletion_reason"] }
+        ]
+      }
+    },
+    "assignment_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "file_id",
+        "path",
+        "feature",
+        "role",
+        "confidence",
+        "evidence_level",
+        "evidence",
+        "state",
+        "rule_ids",
+        "needs_review"
+      ],
+      "properties": {
+        "record_type": { "const": "assignment" },
+        "file_id": { "type": "string", "pattern": "^[0-9]{6}$" },
+        "path": { "type": "string" },
+        "feature": { "$ref": "#/definitions/feature_tag" },
+        "role": { "type": "string", "enum": ["primary", "secondary"] },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "evidence_level": { "$ref": "#/definitions/evidence_level" },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "state": { "type": "string", "enum": ["seeded", "reviewed"] },
+        "rule_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "needs_review": { "type": "boolean" },
+        "review_reasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["origin"] },
+          { "required": ["scope"] },
+          { "required": ["mtk_version"] },
+          { "required": ["deletion_reason"] }
+        ]
+      }
+    }
+  }
+}

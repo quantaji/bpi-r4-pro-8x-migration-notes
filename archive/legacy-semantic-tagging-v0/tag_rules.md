@@ -1,3 +1,14 @@
+# Archived Legacy Semantic Tagging Rule
+
+Archived on 2026-06-08.
+
+This document is not used for the current Phase 1a feature-routing pass.
+Phase 1a now assigns only `feature_tags` with `feature_routing_skill.md`,
+`rules/feature-tags-v1.json`, and `rules/feature-seed-rules-v1.json`.
+
+The `origin`, `scope`, and related semantic tagging model below is kept only as
+legacy reference for later feature-cluster review and migration design.
+
 # Modification Tag Guide
 
 ## 1. Purpose
