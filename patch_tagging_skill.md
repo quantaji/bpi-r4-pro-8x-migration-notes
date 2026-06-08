@@ -204,8 +204,8 @@ For each changed file:
    Split into semantic modifications if the file contains multiple purposes.
 
 4. If status is R or C:
-   treat as rename/copy plus possible modification.
-   Analyze old path, new path, and content delta.
+   use Rename / Copy Rule.
+   Analyze old path, new path, whether content changed, and whether the move changes build behavior.
 
 5. If file is binary/firmware:
    do not rely on textual diff.
@@ -215,6 +215,25 @@ For each changed file:
 
 7. Record evidence and lookup needs.
 ```
+
+## 6.1 Rename / Copy Rule
+
+For status `R` or `C`, do not treat the file as a normal addition.
+
+Analyze:
+
+```text
+old path
+new path
+whether content changed
+whether the move changes build behavior or only file location
+```
+
+If the file was only renamed or copied without semantic change, create a path-movement record.
+
+If the renamed/copied file also changed semantically, create semantic modification records for the changed hunks.
+
+For copied files, also check whether the copied content becomes a new board/device/package behavior or is only reused infrastructure.
 
 ## 7. Evidence Layers
 
@@ -232,6 +251,27 @@ Default rule:
 start with diff
 read full files if context is needed
 reconstruct or inspect patch target source only for high-risk or migration-relevant patches
+```
+
+## 7.1 Full-File Context Rule
+
+When full-file context is required, read both old and new full files.
+
+Reading only the new file is insufficient for determining whether a change is new vendor behavior, inherited upstream behavior, or a context-only change.
+
+This rule especially applies to:
+
+```text
+filogic.mk
+board.d scripts
+platform.sh
+uboot-envtools
+U-Boot Makefile
+DTS/DTSI/DTSO
+wifi-scripts
+hostapd.uc
+wpa_supplicant.uc
+kernel module Makefiles
 ```
 
 ## 8. Ordinary File Analysis
@@ -386,6 +426,28 @@ inner patch:
 migration_feature:
     network:phy:10gbase-t, firmware:phy:runtime
 ```
+
+## 10.1 Patch File Full-Context Rule
+
+If the changed file is a `*.patch`, do not rely only on the outer diff.
+
+For modified `*.patch` files, read:
+
+```text
+outer diff
+old full patch file
+new full patch file
+inner patch target paths
+target source context when needed
+```
+
+The outer diff explains how the patch file changed. The old and new full patch files explain what each patch version actually does.
+
+For deleted `*.patch` files, inspect the deleted patch content if it touches high-risk subsystems. A deleted patch may represent removed kernel, U-Boot, package, driver, DTS, firmware, or runtime behavior.
+
+For added `*.patch` files, inspect the full added patch and its inner target paths before assigning `migration_feature`.
+
+For renamed or copied `*.patch` files, analyze both path movement and semantic content change. A moved patch may change patch order or package application semantics even when content is unchanged.
 
 ## 11. When to Reconstruct Patch Target Source
 
@@ -646,6 +708,9 @@ package/kernel/linux/modules/*
 scripts/mkits.sh
 include/image-commands.mk
 ```
+
+
+Deleted `*.patch` files require extra care. If a deleted patch touched high-risk subsystems, parse the deleted patch content and classify by its inner patch target before assigning a final deletion reason.
 
 ## 16. Modification / Addition Flow
 
@@ -961,6 +1026,33 @@ Feed package lookup:
     mtk25-packages-patches-feeds
 ```
 
+## 21.1 Patch-Collection Diffsets
+
+The following diffsets are patch-collection artifacts, not tree diffsets:
+
+```text
+mtk21-packages-patches-feeds
+mtk24-packages-patches-feeds
+mtk25-packages-patches-feeds
+```
+
+They may contain:
+
+```text
+manifest.yaml
+patch-list.tsv
+target-paths.tsv
+package-paths.tsv
+stat.txt
+files/
+```
+
+Do not expect normal tree-diff files such as `name-status.tsv`, `numstat.tsv`, or `full.patch` unless they were explicitly generated.
+
+Use these diffsets only to determine which external packages are affected by MTK `patches-feeds`.
+
+When analyzing a patch-collection entry, treat the copied `*.patch` file as an existing patch file and apply the Patch File Analysis rules: inspect inner patch targets, classify package paths, and avoid treating the collection itself as an applied tree.
+
 ## 22. When Not to Deep-Read
 
 Do not deep-read:
@@ -1009,21 +1101,32 @@ Before returning analysis for a file, verify:
 2. If deleted, did I assign deletion_reason?
 3. If modified/added, did I split unrelated semantic changes?
 4. If DTS, did I consider full-file and include context?
-5. If *.patch, did I distinguish outer diff from inner patch semantics?
-6. Did I use tag_rules.md for origin/scope/migration_feature?
-7. Did I cite evidence from available diffsets or source trees?
-8. Did I avoid turning tags into final migration decisions?
-9. Did I record unresolved lookup needs?
-10. Did I avoid minimal-change reasoning?
+5. If status is R/C, did I distinguish path movement from semantic change?
+6. If full-file context is required, did I read both old and new full files?
+7. If *.patch, did I distinguish outer diff from inner patch semantics?
+8. If *.patch is modified, did I check old and new full patch files?
+9. If *.patch is deleted or added, did I inspect inner patch targets when high-risk?
+10. If using MTK packages-patches-feeds, did I treat it as a patch collection, not a tree diffset?
+11. Did I use tag_rules.md for origin/scope/migration_feature?
+12. Did I cite evidence from available diffsets or source trees?
+13. Did I avoid turning tags into final migration decisions?
+14. Did I record unresolved lookup needs?
+15. Did I avoid minimal-change reasoning?
 ```
 
 ## 25. Self-Check
 
 Check 1:
-All previous deletion, modification, DTS, patch-file, and reconstruction rules are included.
+All deletion, modification, DTS, patch-file, reconstruction, rename/copy, full-file context, and patch-collection rules are included.
 
 Check 2:
 Full tag definitions are not duplicated; this skill references tag_rules.md.
 
 Check 3:
 The skill includes source trees, diffsets, output format, decision trees, evidence layers, lookup policy, and common mistakes.
+
+Check 4:
+Patch files are handled in both layers: outer diff and inner patch semantics.
+
+Check 5:
+MTK packages-patches-feeds diffsets are explicitly treated as patch collections, not tree diffsets.
