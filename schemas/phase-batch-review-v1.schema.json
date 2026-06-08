@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase Batch Review Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "diffset",
+    "phase",
+    "file_id",
+    "status",
+    "path",
+    "features",
+    "disposition",
+    "owner_phase",
+    "evidence_summary",
+    "minimalism_gate"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "diffset": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string",
+      "pattern": "^[0-9]{2}$"
+    },
+    "file_id": {
+      "type": "string",
+      "pattern": "^[0-9]{6}$"
+    },
+    "status": {
+      "type": "string",
+      "pattern": "^(A|M|D|R[0-9]{3}|C[0-9]{3})$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+:[a-z0-9:-]+$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "route_classes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "primary",
+          "supporting",
+          "review-only",
+          "static-only",
+          "deferred"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "disposition": {
+      "enum": [
+        "migrate",
+        "rewrite",
+        "drop",
+        "defer",
+        "static-only",
+        "review-only",
+        "superseded-by-target",
+        "needs-evidence"
+      ]
+    },
+    "owner_phase": {
+      "type": "string",
+      "pattern": "^[0-9]{2}$"
+    },
+    "evidence_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string"
+    },
+    "todos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minimalism_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checked",
+        "result"
+      ],
+      "properties": {
+        "checked": {
+          "type": "boolean"
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail",
+            "needs-follow-up"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "enum": [
+              "defer",
+              "static-only",
+              "needs-evidence"
+            ]
+          }
+        },
+        "required": [
+          "disposition"
+        ]
+      },
+      "then": {
+        "required": [
+          "todos"
+        ],
+        "properties": {
+          "todos": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

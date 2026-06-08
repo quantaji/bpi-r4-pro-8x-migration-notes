@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "purpose": "Allowed disposition tags for phase batch reviews. A disposition records how a changed file or semantic change should be handled in the current migration phase.",
+  "dispositions": {
+    "migrate": {
+      "meaning": "Preserve and migrate the semantic behavior. The vendor implementation appears directionally sound, but it must still be expressed in the target OpenWrt 25.12 structure.",
+      "requires_todo": false
+    },
+    "rewrite": {
+      "meaning": "Preserve the hardware or software behavior, but redesign or restructure the implementation instead of copying vendor code directly.",
+      "requires_todo": false
+    },
+    "drop": {
+      "meaning": "Do not migrate this change. It is unrelated, noise, obsolete, incorrect for 8X, or not needed after target-context review.",
+      "requires_todo": false
+    },
+    "defer": {
+      "meaning": "Do not handle in the current phase. A later named phase owns the follow-up.",
+      "requires_todo": true
+    },
+    "static-only": {
+      "meaning": "Review or preserve static topology/configuration only. Runtime validation is not available or not in scope.",
+      "requires_todo": true
+    },
+    "review-only": {
+      "meaning": "Use as evidence or background only. It does not directly produce a migration action in the current phase.",
+      "requires_todo": false
+    },
+    "superseded-by-target": {
+      "meaning": "Do not migrate because OpenWrt 25.12 or another target source already provides an equivalent or better implementation.",
+      "requires_todo": false
+    },
+    "needs-evidence": {
+      "meaning": "Evidence is insufficient for a final disposition. The missing evidence and owning phase must be recorded.",
+      "requires_todo": true
+    }
+  },
+  "unreported_minimalism_gate": {
+    "required_for_every_review": true,
+    "failure_condition": "A minimal or incomplete action was accepted without reporting why, naming missing evidence, assigning an owner phase, and recording a TODO."
+  }
+}
