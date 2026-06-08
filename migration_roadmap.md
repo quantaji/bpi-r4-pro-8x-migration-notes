@@ -17,7 +17,7 @@ Do not copy upstream or similar-board hardware behavior into 8X without checking
 
 ## Universal Gates
 
-Every phase must pass these gates before implementation is accepted.
+Every migration step must pass these gates before implementation is accepted.
 
 ### Context Gate
 
@@ -35,31 +35,31 @@ Do not treat deleted upstream patches or packages as hardware support until the 
 
 ### Unreported Minimalism Gate
 
-Every phase review, checkpoint, and commit review must ask whether the work used an unreported minimal-change shortcut.
+Every migration step review, checkpoint, and commit review must ask whether the work used an unreported minimal-change shortcut.
 
 Triggers include:
 
 1. preserving vendor structure only because it is the shortest path,
 2. skipping source/context inspection because the local edit looks obvious,
-3. under-implementing the current phase because a smaller change passes a quick test,
-4. pulling in next-phase behavior because it is nearby,
+3. under-implementing the current migration step because a smaller change passes a quick test,
+4. pulling in next-step behavior because it is nearby,
 5. accepting a workaround without naming why it is temporary.
 
-If any trigger is present, the work is accepted only if it documents the reason, missing evidence, owning later phase, and a concrete TODO.
+If any trigger is present, the work is accepted only if it documents the reason, missing evidence, owning later migration step, and a concrete TODO.
 
-### Phase Boundary Gate
+### Migration Step Boundary Gate
 
-Complete the current phase properly. Do not pre-implement later phases just because the code is adjacent.
+Complete the current migration step properly. Do not pre-implement later migration steps just because the code is adjacent.
 
-When a later-phase dependency blocks the current phase, create a TODO and stop at the documented boundary.
+When a later-step dependency blocks the current migration step, create a TODO and stop at the documented boundary.
 
-## Phase 00: Vendor Evidence And Polarity Gate
+## Migration Step M00: Vendor Evidence And Polarity Gate
 
-Goal: build the evidence matrix that later phases use.
+Goal: build the evidence matrix that later migration steps use.
 
 Primary work:
 
-1. group feature tags by phase,
+1. group feature tags by migration step,
 2. split files by `A/M/D/R` status,
 3. identify direct 8X files versus vendor-family or MTK-wide changes,
 4. mark noisy broad tags that must not drive decisions alone.
@@ -72,15 +72,15 @@ Must inspect:
 
 Exit criteria:
 
-1. each feature tag has an owning phase or an explicit deferred/static/review-only status,
-2. each phase has a file list grouped by `A/M/D/R`,
+1. each feature tag has an owning migration step or an explicit deferred/static/review-only status,
+2. each migration step has a file list grouped by `A/M/D/R`,
 3. broad tags such as `wireless:mac80211:patch`, `wireless:hostapd:build`, and low-confidence `dts:soc:base` are not used as direct migration instructions.
 
-## Phase 01: Clean Build And Image Skeleton
+## Migration Step M01: Clean Build And Image Skeleton
 
 Goal: create the minimal clean OpenWrt 25.12 target structure needed to build a BPI-R4 Pro 8X image.
 
-This phase builds structure, not complete hardware behavior.
+This migration step builds structure, not complete hardware behavior.
 
 Primary work:
 
@@ -103,7 +103,7 @@ Exit criteria:
 2. image artifacts are named and generated intentionally,
 3. every included boot/image/package change has a direct reason tied to 8X buildability.
 
-## Phase 02: SD Boot No Install
+## Migration Step M02: SD Boot No Install
 
 Goal: boot from SD card without writing to NAND or eMMC.
 
@@ -126,9 +126,9 @@ Exit criteria:
 2. serial log confirms expected SD overlay and rootfs path,
 3. NAND/eMMC install menu paths are documented but not exercised.
 
-## Phase 03: Board Identity, Power, I2C, GPIO, Factory Data
+## Migration Step M03: Board Identity, Power, I2C, GPIO, Factory Data
 
-Goal: establish board identity and foundational board services that other phases depend on.
+Goal: establish board identity and foundational board services that later migration steps depend on.
 
 Primary work:
 
@@ -153,7 +153,7 @@ Exit criteria:
 3. I2C mux channels enumerate as expected,
 4. GPIO ownership conflicts are resolved or documented with TODOs.
 
-## Phase 04: Basic Wired Management
+## Migration Step M04: Basic Wired Management
 
 Goal: bring up enough wired networking to manage and test the board.
 
@@ -177,7 +177,7 @@ Exit criteria:
 2. LAN/WAN defaults match 8X vendor topology,
 3. no 4E-only port assumption is present.
 
-## Phase 05: Full Wired Switch, SFP, And 10G
+## Migration Step M05: Full Wired Switch, SFP, And 10G
 
 Goal: validate complete wired hardware behavior.
 
@@ -203,7 +203,7 @@ Exit criteria:
 3. SFP1 and SFP2 each pass module-detect and link tests when tested individually,
 4. combo mux behavior is understood and documented.
 
-## Phase 06: Basic Wi-Fi Hardware
+## Migration Step M06: Basic Wi-Fi Hardware
 
 Goal: bring up Wi-Fi radios at the hardware and driver level.
 
@@ -227,7 +227,7 @@ Exit criteria:
 2. calibration data is loaded from the expected source,
 3. a Wi-Fi 6 client can associate for basic functional testing.
 
-## Phase 07: Wireless Userspace, MLO, AFC, And Policy
+## Migration Step M07: Wireless Userspace, MLO, AFC, And Policy
 
 Goal: migrate wireless userspace and policy behavior after basic radios work.
 
@@ -251,7 +251,7 @@ Exit criteria:
 2. MLO-related behavior is either working or explicitly deferred,
 3. regulatory and AFC changes have clear applicability notes.
 
-## Phase 08: Acceleration And Offload
+## Migration Step M08: Acceleration And Offload
 
 Goal: enable and test acceleration only after base wired and Wi-Fi paths are correct.
 
@@ -276,7 +276,7 @@ Exit criteria:
 2. non-offloaded path remains correct,
 3. performance and regression tests are documented.
 
-## Phase 09: Board Extras And Expansion
+## Migration Step M09: Board Extras And Expansion
 
 Goal: finish non-core board runtime features after boot, wired, and Wi-Fi are stable.
 
@@ -299,7 +299,7 @@ Exit criteria:
 2. PCIe expansion topology is understood,
 3. cellular support is documented as static-only or deferred.
 
-## Phase 10: Onboard Storage, Install, And Sysupgrade
+## Migration Step M10: Onboard Storage, Install, And Sysupgrade
 
 Goal: handle persistent onboard storage only after all major runtime hardware is stable from SD.
 
@@ -326,7 +326,7 @@ Exit criteria:
 2. eMMC write path is tested only after recovery strategy is validated,
 3. U-Boot recovery and production bootconf choices are audited before any persistent write.
 
-## Phase 11: Release Validation
+## Migration Step M11: Release Validation
 
 Goal: verify the migrated implementation as a coherent OpenWrt 25.12 board target.
 
@@ -341,7 +341,7 @@ Primary work:
 
 Exit criteria:
 
-1. every phase has test evidence or documented limitation,
-2. every temporary minimal implementation has a TODO and owning phase,
+1. every migration step has test evidence or documented limitation,
+2. every temporary minimal implementation has a TODO and owning migration step,
 3. no unreported minimal-change shortcut remains,
 4. the remaining diff is organized by feature clusters rather than vendor patch order.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build migration phase indexes from Phase 1a feature-routing output."""
+"""Build migration-step indexes from Project Phase 1a feature-routing output."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def write_tsv(path: Path, header: list[str], rows: list[list[Any]]) -> None:
 
 
 def ensure_generated_dirs(output_dir: Path) -> None:
-    for subdir in ["by-phase", "summary"]:
+    for subdir in ["by-step", "summary"]:
         path = output_dir / subdir
         path.mkdir(parents=True, exist_ok=True)
         for child in path.iterdir():
@@ -64,8 +64,8 @@ def ensure_generated_dirs(output_dir: Path) -> None:
                 child.unlink()
 
 
-def phase_filename(phase: dict[str, Any]) -> str:
-    return f"{phase['id']}-{phase['slug']}.json"
+def step_filename(step: dict[str, Any]) -> str:
+    return f"{step['id']}-{step['slug']}.json"
 
 
 def clean_row(row: dict[str, Any]) -> dict[str, Any]:
@@ -79,23 +79,23 @@ def class_rank(value: str) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("routing_dir", type=Path, help="Feature-routing output directory with files.jsonl and assignments.jsonl")
-    parser.add_argument("--phase-map", type=Path, default=Path("rules/feature-phase-map-v1.json"))
+    parser.add_argument("--step-map", type=Path, default=Path("rules/feature-migration-step-map-v1.json"))
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--allow-missing", action="store_true", help="Write indexes even if a feature is missing from the phase map")
+    parser.add_argument("--allow-missing", action="store_true", help="Write indexes even if a feature is missing from the migration-step map")
     args = parser.parse_args()
 
     routing_dir = args.routing_dir.resolve()
-    phase_map_path = args.phase_map.resolve()
+    step_map_path = args.step_map.resolve()
     output_dir = args.output_dir.resolve()
 
-    phase_map = load_json(phase_map_path)
+    step_map = load_json(step_map_path)
     files = load_jsonl(routing_dir / "files.jsonl")
     assignments = load_jsonl(routing_dir / "assignments.jsonl")
 
-    feature_routes: dict[str, list[dict[str, str]]] = phase_map["feature_routes"]
-    phases: list[dict[str, str]] = phase_map["phases"]
-    phases_by_id = {phase["id"]: phase for phase in phases}
-    broad_tags = set(phase_map.get("broad_tags_needing_split", []))
+    feature_routes: dict[str, list[dict[str, str]]] = step_map["feature_routes"]
+    steps: list[dict[str, str]] = step_map["migration_steps"]
+    steps_by_id = {step["id"]: step for step in steps}
+    broad_tags = set(step_map.get("broad_tags_needing_split", []))
 
     routed_features = set(feature_routes)
     seen_features = {row["feature"] for row in assignments}
@@ -110,9 +110,9 @@ def main() -> int:
     ensure_generated_dirs(output_dir)
 
     files_by_id = {row["file_id"]: clean_row(row) for row in files}
-    phase_assignments: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    phase_file_features: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
-    feature_phase_counts: Counter[tuple[str, str, str]] = Counter()
+    step_assignments: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    step_file_features: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: defaultdict(list))
+    feature_step_counts: Counter[tuple[str, str, str]] = Counter()
     broad_split_rows: list[dict[str, Any]] = []
     missing_assignment_rows: list[dict[str, Any]] = []
 
@@ -125,23 +125,23 @@ def main() -> int:
             continue
 
         for route in routes:
-            phase_id = route["phase"]
-            phase = phases_by_id[phase_id]
+            step_id = route["step"]
+            step = steps_by_id[step_id]
             enriched = {
                 "assignment": clean_row(assignment),
                 "file": file_row,
-                "phase": {
-                    "id": phase_id,
-                    "slug": phase["slug"],
-                    "title": phase["title"]
+                "migration_step": {
+                    "id": step_id,
+                    "slug": step["slug"],
+                    "title": step["title"]
                 },
                 "route": {
                     "class": route["class"],
                     "note": route.get("note", "")
                 }
             }
-            phase_assignments[phase_id].append(enriched)
-            phase_file_features[phase_id][assignment["file_id"]].append(
+            step_assignments[step_id].append(enriched)
+            step_file_features[step_id][assignment["file_id"]].append(
                 {
                     "feature": feature,
                     "route_class": route["class"],
@@ -151,31 +151,31 @@ def main() -> int:
                     "note": route.get("note", "")
                 }
             )
-            feature_phase_counts[(phase_id, feature, route["class"])] += 1
+            feature_step_counts[(step_id, feature, route["class"])] += 1
 
     for feature in sorted(seen_features & broad_tags):
         routes = feature_routes[feature]
         broad_split_rows.append(
             {
                 "feature": feature,
-                "phase_routes": ",".join(f"{route['phase']}:{route['class']}" for route in routes),
+                "step_routes": ",".join(f"{route['step']}:{route['class']}" for route in routes),
                 "assignment_count": sum(1 for row in assignments if row["feature"] == feature),
                 "reason": "broad tag must be split by polarity, direct 8X evidence, runtime necessity, and minimalism risk"
             }
         )
 
-    phase_file_index_rows: list[list[Any]] = []
+    step_file_index_rows: list[list[Any]] = []
     review_only_rows: list[list[Any]] = []
     static_only_rows: list[list[Any]] = []
     deferred_rows: list[list[Any]] = []
 
-    for phase in phases:
-        phase_id = phase["id"]
-        files_for_phase = []
-        for file_id, feature_rows in sorted(phase_file_features.get(phase_id, {}).items()):
+    for step in steps:
+        step_id = step["id"]
+        files_for_step = []
+        for file_id, feature_rows in sorted(step_file_features.get(step_id, {}).items()):
             file_row = files_by_id[file_id]
             route_classes = sorted({row["route_class"] for row in feature_rows}, key=class_rank)
-            phase_features = sorted({row["feature"] for row in feature_rows})
+            step_features = sorted({row["feature"] for row in feature_rows})
             needs_review = bool(file_row.get("needs_review")) or any(row.get("needs_review") for row in feature_rows)
             file_obj = {
                 "file_id": file_id,
@@ -187,18 +187,18 @@ def main() -> int:
                 "features": sorted(feature_rows, key=lambda row: (class_rank(row["route_class"]), row["feature"])),
                 "review_reasons": file_row.get("review_reasons", [])
             }
-            files_for_phase.append(file_obj)
+            files_for_step.append(file_obj)
 
-            phase_file_index_rows.append(
+            step_file_index_rows.append(
                 [
-                    phase_id,
-                    phase["slug"],
+                    step_id,
+                    step["slug"],
                     file_id,
                     file_row.get("status"),
                     file_row.get("effective_path"),
                     file_row.get("file_kind"),
                     ",".join(route_classes),
-                    ",".join(phase_features),
+                    ",".join(step_features),
                     needs_review,
                     "yes",
                     " | ".join(file_row.get("review_reasons", []))
@@ -209,7 +209,7 @@ def main() -> int:
             if "review-only" in review_classes:
                 review_only_rows.append(
                     [
-                        phase_id,
+                        step_id,
                         file_id,
                         file_row.get("status"),
                         file_row.get("effective_path"),
@@ -221,7 +221,7 @@ def main() -> int:
             if "static-only" in review_classes:
                 static_only_rows.append(
                     [
-                        phase_id,
+                        step_id,
                         file_id,
                         file_row.get("status"),
                         file_row.get("effective_path"),
@@ -233,43 +233,43 @@ def main() -> int:
             if "deferred" in review_classes:
                 deferred_rows.append(
                     [
-                        phase_id,
+                        step_id,
                         file_id,
                         file_row.get("status"),
                         file_row.get("effective_path"),
                         file_row.get("file_kind"),
                         ",".join(row["feature"] for row in feature_rows if row["route_class"] == "deferred"),
-                        "deferred from this phase by roadmap boundary"
+                        "deferred from this migration step by roadmap boundary"
                     ]
                 )
 
         write_json(
-            output_dir / "by-phase" / phase_filename(phase),
+            output_dir / "by-step" / step_filename(step),
             {
-                "phase": phase,
-                "file_count": len(files_for_phase),
-                "assignment_count": len(phase_assignments.get(phase_id, [])),
-                "class_counts": dict(Counter(row["route"]["class"] for row in phase_assignments.get(phase_id, []))),
-                "status_counts": dict(Counter(row["status"] for row in files_for_phase)),
-                "files": files_for_phase
+                "migration_step": step,
+                "file_count": len(files_for_step),
+                "assignment_count": len(step_assignments.get(step_id, [])),
+                "class_counts": dict(Counter(row["route"]["class"] for row in step_assignments.get(step_id, []))),
+                "status_counts": dict(Counter(row["status"] for row in files_for_step)),
+                "files": files_for_step
             }
         )
 
-    phase_counts_rows = []
-    phase_status_rows = []
-    phase_class_rows = []
-    for phase in phases:
-        phase_id = phase["id"]
-        files_for_phase = phase_file_features.get(phase_id, {})
-        assignments_for_phase = phase_assignments.get(phase_id, [])
-        class_counts = Counter(row["route"]["class"] for row in assignments_for_phase)
-        phase_counts_rows.append(
+    step_counts_rows = []
+    step_status_rows = []
+    step_class_rows = []
+    for step in steps:
+        step_id = step["id"]
+        files_for_step = step_file_features.get(step_id, {})
+        assignments_for_step = step_assignments.get(step_id, [])
+        class_counts = Counter(row["route"]["class"] for row in assignments_for_step)
+        step_counts_rows.append(
             [
-                phase_id,
-                phase["slug"],
-                phase["title"],
-                len(files_for_phase),
-                len(assignments_for_phase),
+                step_id,
+                step["slug"],
+                step["title"],
+                len(files_for_step),
+                len(assignments_for_step),
                 class_counts.get("primary", 0),
                 class_counts.get("supporting", 0),
                 class_counts.get("review-only", 0),
@@ -277,16 +277,16 @@ def main() -> int:
                 class_counts.get("deferred", 0)
             ]
         )
-        status_counts = Counter(files_by_id[file_id].get("status") for file_id in files_for_phase)
+        status_counts = Counter(files_by_id[file_id].get("status") for file_id in files_for_step)
         for status, count in sorted(status_counts.items()):
-            phase_status_rows.append([phase_id, phase["slug"], status, count])
+            step_status_rows.append([step_id, step["slug"], status, count])
         for route_class, count in sorted(class_counts.items(), key=lambda item: class_rank(item[0])):
-            phase_class_rows.append([phase_id, phase["slug"], route_class, count])
+            step_class_rows.append([step_id, step["slug"], route_class, count])
 
     write_tsv(
-        output_dir / "summary" / "phase-counts.tsv",
+        output_dir / "summary" / "step-counts.tsv",
         [
-            "phase",
+            "migration_step",
             "slug",
             "title",
             "file_count",
@@ -297,30 +297,30 @@ def main() -> int:
             "static_only_assignments",
             "deferred_assignments"
         ],
-        phase_counts_rows
+        step_counts_rows
     )
     write_tsv(
-        output_dir / "summary" / "phase-status-counts.tsv",
-        ["phase", "slug", "status", "file_count"],
-        phase_status_rows
+        output_dir / "summary" / "step-status-counts.tsv",
+        ["migration_step", "slug", "status", "file_count"],
+        step_status_rows
     )
     write_tsv(
-        output_dir / "summary" / "phase-class-counts.tsv",
-        ["phase", "slug", "route_class", "assignment_count"],
-        phase_class_rows
+        output_dir / "summary" / "step-class-counts.tsv",
+        ["migration_step", "slug", "route_class", "assignment_count"],
+        step_class_rows
     )
     write_tsv(
-        output_dir / "summary" / "phase-feature-counts.tsv",
-        ["phase", "feature", "route_class", "assignment_count"],
+        output_dir / "summary" / "step-feature-counts.tsv",
+        ["migration_step", "feature", "route_class", "assignment_count"],
         [
-            [phase_id, feature, route_class, count]
-            for (phase_id, feature, route_class), count in sorted(feature_phase_counts.items())
+            [step_id, feature, route_class, count]
+            for (step_id, feature, route_class), count in sorted(feature_step_counts.items())
         ]
     )
     write_tsv(
-        output_dir / "summary" / "phase-file-index.tsv",
+        output_dir / "summary" / "step-file-index.tsv",
         [
-            "phase",
+            "migration_step",
             "slug",
             "file_id",
             "status",
@@ -332,28 +332,28 @@ def main() -> int:
             "minimalism_gate_required",
             "review_reasons"
         ],
-        phase_file_index_rows
+        step_file_index_rows
     )
     write_tsv(
         output_dir / "summary" / "review-only-files.tsv",
-        ["phase", "file_id", "status", "path", "file_kind", "review_only_features", "reason"],
+        ["migration_step", "file_id", "status", "path", "file_kind", "review_only_features", "reason"],
         review_only_rows
     )
     write_tsv(
         output_dir / "summary" / "static-only-files.tsv",
-        ["phase", "file_id", "status", "path", "file_kind", "static_only_features", "reason"],
+        ["migration_step", "file_id", "status", "path", "file_kind", "static_only_features", "reason"],
         static_only_rows
     )
     write_tsv(
         output_dir / "summary" / "deferred-files.tsv",
-        ["phase", "file_id", "status", "path", "file_kind", "deferred_features", "reason"],
+        ["migration_step", "file_id", "status", "path", "file_kind", "deferred_features", "reason"],
         deferred_rows
     )
     write_tsv(
         output_dir / "summary" / "broad-tags-needing-split.tsv",
-        ["feature", "assignment_count", "phase_routes", "reason"],
+        ["feature", "assignment_count", "step_routes", "reason"],
         [
-            [row["feature"], row["assignment_count"], row["phase_routes"], row["reason"]]
+            [row["feature"], row["assignment_count"], row["step_routes"], row["reason"]]
             for row in broad_split_rows
         ]
     )
@@ -371,20 +371,20 @@ def main() -> int:
     write_json(
         output_dir / "manifest.json",
         {
-            "phase": "1b-phase-routing",
+            "project_phase": "1b-migration-step-routing",
             "routing_dir": str(routing_dir),
-            "phase_map": str(phase_map_path),
+            "migration_step_map": str(step_map_path),
             "files": len(files),
             "assignments": len(assignments),
             "mapped_features": len(seen_features - set(missing_features)),
             "missing_features": missing_features,
             "extra_feature_routes": extra_features,
-            "notes": "Generated phase index. Migration decisions still require evidence review and the unreported-minimalism gate."
+            "notes": "Generated migration-step index. Migration decisions still require evidence review and the unreported-minimalism gate."
         }
     )
 
     print(
-        f"built phase indexes for {len(files)} files, {len(assignments)} assignments, "
+        f"built migration-step indexes for {len(files)} files, {len(assignments)} assignments, "
         f"{len(seen_features)} features in {output_dir}"
     )
     return 0

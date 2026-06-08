@@ -38,15 +38,15 @@ The tags decide which reference source needs to be inspected. This avoids treati
 
 The project is file-driven first, then cluster-driven, then migration-driven.
 
-## 4. Phase 1: Diff and Tag
+## 4. Project Phase 1: Diff and Tag
 
-Phase 1 builds an inventory of the BPI-R4 Pro 8X vendor delta.
+Project Phase 1 builds an inventory of the BPI-R4 Pro 8X vendor delta.
 
 The input is the diff between the BPI-R4 Pro 8X vendor tree and OpenWrt 24.10 upstream.
 
 The purpose is to identify what changed, where each change likely came from, what function it serves, how broadly it applies, and what should happen to it in OpenWrt 25.12.
 
-This phase does not migrate code. It produces a structured inventory that later phases can rely on.
+Project Phase 1 does not migrate code. It produces a structured inventory that later Project Phases and migration steps can rely on.
 
 Expected outputs:
 
@@ -56,9 +56,9 @@ analysis/8x_file_tags.csv
 analysis/8x_file_decisions.csv
 ````
 
-## 5. Phase 2: Cluster Diff
+## 5. Project Phase 2: Cluster Diff
 
-Phase 2 groups tagged files and hunks into functional clusters.
+Project Phase 2 groups tagged files and hunks into functional clusters.
 
 A cluster represents a complete hardware or software behavior. It is not simply a directory or patch file.
 
@@ -66,7 +66,7 @@ Examples of clusters include boot chain, storage and sysupgrade, MAC address han
 
 For each cluster, determine which files belong to it, what hardware behavior it represents, what comes from MTK, what is BPI-specific, what is shared with other boards, what OpenWrt 25.12 already supports, and what remains uncertain.
 
-This phase should separate hardware facts, vendor behavior, MTK SDK implementation, OpenWrt target structure, upstream implementation, and temporary workarounds.
+Project Phase 2 should separate hardware facts, vendor behavior, MTK SDK implementation, OpenWrt target structure, upstream implementation, and temporary workarounds.
 
 Expected outputs:
 
@@ -74,9 +74,9 @@ Expected outputs:
 analysis/clusters/<cluster-name>.md
 ```
 
-## 6. Phase 3: Cluster Migration
+## 6. Project Phase 3: Cluster Migration
 
-Phase 3 migrates clusters into OpenWrt 25.12.
+Project Phase 3 migrates clusters into OpenWrt 25.12.
 
 Migration happens cluster by cluster, not by vendor patch order.
 
@@ -106,18 +106,18 @@ Every change should be judged by hardware correctness, OpenWrt 25.12 structure, 
 
 Before accepting each commit, explicitly check whether the commit is following a minimal-change shortcut against the project instructions. If it is, reject or rewrite it unless there is a documented reason to keep the minimal form temporarily.
 
-Every phase review, checkpoint, and commit review must check for unreported minimal-change behavior. If a change or decision used a minimal shortcut without explicitly reporting it, documenting why it was accepted, and assigning a follow-up TODO, the review is incomplete.
+Every Project Phase review, migration-step review, checkpoint, and commit review must check for unreported minimal-change behavior. If a change or decision used a minimal shortcut without explicitly reporting it, documenting why it was accepted, and assigning a follow-up TODO, the review is incomplete.
 
 Do not use "minimal fix" as an excuse to avoid reading context. Before choosing an implementation strategy, inspect the relevant vendor files, target OpenWrt 25.12 files, feature-routing records, and cluster notes. If the context has not been inspected, the correct action is to inspect it, not to guess a small patch.
 
-Work must be bounded by the current migration objective, but the current objective must still be completed properly. Do not pre-implement the next phase only because it is nearby. Do not under-implement the current phase only because a smaller local change appears to pass an immediate test.
+Work must be bounded by the current migration objective, but the current objective must still be completed properly. Do not pre-implement the next migration step only because it is nearby. Do not under-implement the current migration objective only because a smaller local change appears to pass an immediate test.
 
 When a minimal or incomplete implementation is forced by missing evidence, hardware access, time, or dependency order, mark it explicitly. The marker must include:
 
 1. what was intentionally left incomplete,
 2. why the minimal form was accepted,
 3. which evidence or test is missing,
-4. which later phase owns the follow-up,
+4. which later Project Phase or migration step owns the follow-up,
 5. a concrete TODO in the cluster notes, commit message, or known-limitations file.
 
 Temporary minimal changes are allowed only when all of the following are true:
@@ -127,7 +127,7 @@ Temporary minimal changes are allowed only when all of the following are true:
 3. The change is isolated from unrelated clusters.
 4. There is a planned replacement or cleanup path.
 5. The temporary nature is visible in the commit message or cluster notes.
-6. A follow-up TODO names the owning phase and the evidence required to close it.
+6. A follow-up TODO names the owning Project Phase or migration step and the evidence required to close it.
 
 Do not assume vendor code is correct.
 
@@ -160,8 +160,8 @@ Every commit must answer these questions before it is accepted:
 7. Does the commit make future migration to OpenWrt main, Linux upstream, or ImmortalWrt harder?
 8. What runtime evidence or test plan validates it?
 9. Which relevant context files were inspected before choosing this implementation?
-10. Does the commit finish the current objective without silently pulling in the next phase?
-11. If the implementation is intentionally minimal or incomplete, where is the TODO and which phase owns it?
+10. Does the commit finish the current objective without silently pulling in the next migration step?
+11. If the implementation is intentionally minimal or incomplete, where is the TODO and which Project Phase or migration step owns it?
 
 A commit that only minimizes local diff size without satisfying the project principles should be rejected.
 

@@ -1,78 +1,4 @@
 {
-  "schema_version": 1,
-  "purpose": "Map Phase 1a feature-routing tags to migration roadmap phases. This map is an inspection index, not a final migration decision.",
-  "source_documents": [
-    "migration_roadmap.md",
-    "feature_phase_map.md"
-  ],
-  "universal_gates": [
-    "context",
-    "polarity",
-    "unreported-minimalism",
-    "phase-boundary"
-  ],
-  "phases": [
-    {
-      "id": "00",
-      "slug": "vendor-evidence-and-polarity-gate",
-      "title": "Vendor Evidence And Polarity Gate"
-    },
-    {
-      "id": "01",
-      "slug": "clean-build-and-image-skeleton",
-      "title": "Clean Build And Image Skeleton"
-    },
-    {
-      "id": "02",
-      "slug": "sd-boot-no-install",
-      "title": "SD Boot No Install"
-    },
-    {
-      "id": "03",
-      "slug": "board-identity-power-i2c-gpio-factory-data",
-      "title": "Board Identity, Power, I2C, GPIO, Factory Data"
-    },
-    {
-      "id": "04",
-      "slug": "basic-wired-management",
-      "title": "Basic Wired Management"
-    },
-    {
-      "id": "05",
-      "slug": "full-wired-switch-sfp-and-10g",
-      "title": "Full Wired Switch, SFP, And 10G"
-    },
-    {
-      "id": "06",
-      "slug": "basic-wifi-hardware",
-      "title": "Basic Wi-Fi Hardware"
-    },
-    {
-      "id": "07",
-      "slug": "wireless-userspace-mlo-afc-and-policy",
-      "title": "Wireless Userspace, MLO, AFC, And Policy"
-    },
-    {
-      "id": "08",
-      "slug": "acceleration-and-offload",
-      "title": "Acceleration And Offload"
-    },
-    {
-      "id": "09",
-      "slug": "board-extras-and-expansion",
-      "title": "Board Extras And Expansion"
-    },
-    {
-      "id": "10",
-      "slug": "onboard-storage-install-and-sysupgrade",
-      "title": "Onboard Storage, Install, And Sysupgrade"
-    },
-    {
-      "id": "11",
-      "slug": "release-validation",
-      "title": "Release Validation"
-    }
-  ],
   "broad_tags_needing_split": [
     "wireless:mac80211:patch",
     "wireless:hostapd:build",
@@ -86,900 +12,974 @@
       {
         "class": "review-only",
         "note": "Only migrate if required and justified.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:flowtable:nft": [
       {
         "class": "primary",
         "note": "nft flowtable.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:hnat:nat": [
       {
         "class": "primary",
         "note": "HNAT NAT behavior.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:hnat:routing": [
       {
         "class": "primary",
         "note": "HNAT routing behavior.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:ppe:flow-offload": [
       {
         "class": "primary",
         "note": "PPE flow offload.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:tops:tunnel-offload": [
       {
         "class": "primary",
         "note": "TOPS tunnel offload.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "accel:wed:wifi-offload": [
       {
         "class": "primary",
         "note": "WED Wi-Fi offload.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "boot:recovery:factory-install": [
       {
         "class": "deferred",
         "note": "Factory install is explicitly deferred during SD boot.",
-        "phase": "02"
+        "step": "M02"
       },
       {
         "class": "primary",
         "note": "Factory install behavior.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "boot:recovery:failsafe": [
       {
         "class": "supporting",
         "note": "Boot safety only; not factory install.",
-        "phase": "02"
+        "step": "M02"
       }
     ],
     "boot:tf-a:build": [
       {
         "class": "primary",
         "note": "Needed for boot artifacts.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "boot:uboot:bootmenu": [
       {
         "class": "primary",
         "note": "Review menu actions, but do not use install entries.",
-        "phase": "02"
+        "step": "M02"
       }
     ],
     "boot:uboot:build": [
       {
         "class": "primary",
         "note": "U-Boot build integration.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "boot:uboot:dts": [
       {
         "class": "primary",
         "note": "U-Boot board DTS.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "boot:uboot:env": [
       {
         "class": "primary",
         "note": "SD boot environment review.",
-        "phase": "02"
+        "step": "M02"
       }
     ],
     "boot:uboot:recovery": [
       {
         "class": "supporting",
         "note": "Only enough to understand SD recovery boot behavior.",
-        "phase": "02"
+        "step": "M02"
       },
       {
         "class": "primary",
         "note": "Recovery path after persistent storage work.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "boot:uboot:storage-layout": [
       {
         "class": "deferred",
-        "note": "Persistent install layout belongs to Phase 10.",
-        "phase": "02"
+        "note": "Persistent install layout belongs to Migration Step M10.",
+        "step": "M02"
       },
       {
         "class": "primary",
         "note": "U-Boot persistent storage layout.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "boot:uboot:target": [
       {
         "class": "primary",
         "note": "U-Boot target selection.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "build:kernel:config": [
       {
         "class": "supporting",
         "note": "Kernel config fragments.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "build:package:makefile": [
       {
         "class": "primary",
         "note": "Package build integration.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "build:scripts:helper": [
       {
         "class": "supporting",
         "note": "Build helper scripts.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "build:toolchain:config": [
       {
         "class": "review-only",
         "note": "Usually not board-specific; review before accepting.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "build:tools:host-tool": [
       {
         "class": "primary",
         "note": "Host tools required for image generation.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "bus:gpio:controller": [
       {
         "class": "supporting",
         "note": "GPIO ownership and conflicts.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "bus:mdio:controller": [
       {
         "class": "supporting",
-        "note": "MDIO bus context before full wired phase.",
-        "phase": "03"
+        "note": "MDIO bus context before full wired migration step.",
+        "step": "M03"
       }
     ],
     "bus:pcie:controller": [
       {
         "class": "primary",
         "note": "PCIe controller context.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "bus:spi:controller": [
       {
         "class": "supporting",
         "note": "SPI bus context before NAND install.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "bus:usb:controller": [
       {
         "class": "primary",
         "note": "USB controller behavior.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "cellular:network:wan-interface": [
       {
         "class": "static-only",
         "note": "Do not claim runtime validation without 4G/5G module.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "cellular:sim:interface": [
       {
         "class": "static-only",
         "note": "Static SIM wiring only.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "cellular:slot:m2-bkey": [
       {
         "class": "static-only",
         "note": "No 4G/5G module available.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "cellular:slot:minipcie": [
       {
         "class": "static-only",
         "note": "No 4G/5G module available.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:board:base": [
       {
         "class": "primary",
         "note": "Board-level DTS facts.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "dts:board:variant": [
       {
         "class": "primary",
         "note": "8X variant identity.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "dts:button:definition": [
       {
         "class": "primary",
         "note": "Button definitions.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:clock-reset:binding": [
       {
         "class": "supporting",
         "note": "Review where board nodes depend on reset/clock bindings.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "dts:fan:pwm": [
       {
         "class": "primary",
         "note": "Fan DTS.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:led:definition": [
       {
         "class": "primary",
         "note": "LED definitions.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:nvmem:factory-data": [
       {
         "class": "primary",
         "note": "Factory data nodes.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "dts:overlay:cellular": [
       {
         "class": "static-only",
         "note": "Static topology only without module.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:overlay:network": [
       {
         "class": "supporting",
         "note": "Network overlays; inspect against direct 8X topology.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "dts:overlay:pcie": [
       {
         "class": "supporting",
         "note": "PCIe overlays.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "dts:overlay:storage": [
       {
         "class": "primary",
-        "note": "SD/eMMC/NAND overlays; only SD path is active in this phase.",
-        "phase": "02"
+        "note": "SD/eMMC/NAND overlays; only SD path is active in this migration step.",
+        "step": "M02"
       },
       {
         "class": "primary",
         "note": "Persistent storage overlays are revisited for NAND/eMMC install.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "dts:overlay:wifi": [
       {
         "class": "primary",
         "note": "Wi-Fi overlay.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "dts:partition:layout": [
       {
         "class": "primary",
-        "note": "Persistent partition layout; SD rootfs-only handling is Phase 02.",
-        "phase": "10"
+        "note": "Persistent partition layout; SD rootfs-only handling is Migration Step M02.",
+        "step": "M10"
       }
     ],
     "dts:pinctrl:function": [
       {
         "class": "supporting",
         "note": "Pinctrl ownership.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "dts:soc:base": [
       {
         "class": "review-only",
         "note": "Broad and noisy; do not use alone for design decisions.",
-        "phase": "00"
+        "step": "M00"
       }
     ],
     "dts:thermal:zone": [
       {
         "class": "primary",
         "note": "Thermal zones.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "expansion:m2-bkey:cellular": [
       {
         "class": "static-only",
         "note": "Static expansion mapping.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "expansion:minipcie:cellular": [
       {
         "class": "static-only",
         "note": "Static expansion mapping.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "firmware:boot:blob": [
       {
         "class": "primary",
         "note": "Boot firmware artifacts.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "firmware:phy:runtime": [
       {
         "class": "primary",
         "note": "PHY firmware packages/files.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "firmware:wed:wo": [
       {
         "class": "primary",
         "note": "WO firmware.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "firmware:wifi:eeprom": [
       {
         "class": "primary",
         "note": "Wi-Fi EEPROM firmware/data handling.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "firmware:wifi:runtime": [
       {
         "class": "primary",
         "note": "Runtime Wi-Fi firmware.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "identity:calibration:phy": [
       {
         "class": "primary",
         "note": "PHY calibration identity.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "identity:calibration:wifi": [
       {
         "class": "primary",
         "note": "Wi-Fi calibration identity.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "identity:mac:ethernet": [
       {
         "class": "primary",
         "note": "Ethernet MAC assignment.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "identity:nvmem:factory": [
       {
         "class": "primary",
         "note": "Factory identity source.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "identity:uboot-env:ethaddr": [
       {
         "class": "supporting",
         "note": "Use only if needed for early boot identity.",
-        "phase": "02"
+        "step": "M02"
       }
     ],
     "image:device-recipe": [
       {
         "class": "primary",
         "note": "8X profile and image recipe.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "image:dts-selection": [
       {
         "class": "primary",
         "note": "DTS/DTSO selection.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "image:factory-image": [
       {
         "class": "primary",
         "note": "Artifact generation only; install behavior belongs later.",
-        "phase": "01"
+        "step": "M01"
       },
       {
         "class": "primary",
         "note": "Recheck factory artifacts.",
-        "phase": "11"
+        "step": "M11"
       }
     ],
     "image:fit": [
       {
         "class": "primary",
         "note": "FIT image handling for boot skeleton.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "image:sysupgrade-image": [
       {
         "class": "primary",
         "note": "Sysupgrade artifacts.",
-        "phase": "10"
+        "step": "M10"
       },
       {
         "class": "primary",
         "note": "Recheck sysupgrade artifacts.",
-        "phase": "11"
+        "step": "M11"
       }
     ],
     "network:combo:gpio-mux": [
       {
         "class": "primary",
         "note": "GPIO mux behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:combo:runtime-switch": [
       {
         "class": "primary",
         "note": "Runtime combo switch behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:combo:sfp-rj45": [
       {
         "class": "primary",
         "note": "SFP/RJ45 combo behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:default-config:bridge": [
       {
         "class": "primary",
         "note": "Bridge default.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "network:default-config:wan": [
       {
         "class": "primary",
         "note": "WAN default.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "network:dsa:switch": [
       {
         "class": "primary",
         "note": "DSA switch support.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:dsa:tagging": [
       {
         "class": "primary",
         "note": "DSA tag protocol.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:mac:mtk-eth": [
       {
         "class": "primary",
         "note": "Ethernet MAC driver and integration.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "network:mdio:bus": [
       {
         "class": "primary",
         "note": "MDIO bus behavior.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "network:pcs:10gbase-r": [
       {
         "class": "primary",
         "note": "10GBase-R PCS.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:pcs:usxgmii": [
       {
         "class": "primary",
         "note": "USXGMII PCS.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:phy:10gbase-t": [
       {
         "class": "primary",
         "note": "10G copper PHY behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:phy:firmware": [
       {
         "class": "primary",
         "note": "PHY runtime firmware.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:phy:generic": [
       {
         "class": "review-only",
         "note": "Inspect only when tied to 8X network evidence.",
-        "phase": "00"
+        "step": "M00"
       }
     ],
     "network:phy:multi-rate": [
       {
         "class": "review-only",
         "note": "Large PHY cluster; split before migration.",
-        "phase": "00"
+        "step": "M00"
       }
     ],
     "network:port-label:lan-wan": [
       {
         "class": "primary",
         "note": "Port labels.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "network:sfp:cage": [
       {
         "class": "primary",
         "note": "SFP cage definitions.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:sfp:hotplug": [
       {
         "class": "primary",
         "note": "Hotplug behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:sfp:i2c": [
       {
         "class": "primary",
         "note": "SFP I2C path.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:sfp:module-detect": [
       {
         "class": "primary",
         "note": "Module detect behavior.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:switch:external-dsa": [
       {
         "class": "primary",
         "note": "External DSA switch.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:switch:vlan-offload": [
       {
         "class": "primary",
         "note": "Switch VLAN behavior before acceleration.",
-        "phase": "05"
+        "step": "M05"
       }
     ],
     "network:vlan:bridge": [
       {
         "class": "supporting",
         "note": "Basic bridge semantics only.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "openwrt:base-files:board-detect": [
       {
         "class": "primary",
         "note": "Board detect closure.",
-        "phase": "11"
+        "step": "M11"
       }
     ],
     "openwrt:board-d:network": [
       {
         "class": "primary",
         "note": "8X LAN/WAN defaults.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "openwrt:firewall:defaults": [
       {
         "class": "supporting",
         "note": "Default policy, not hardware proof.",
-        "phase": "04"
+        "step": "M04"
       }
     ],
     "openwrt:hotplug:wifi": [
       {
         "class": "supporting",
         "note": "Hotplug needed for radio init.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "openwrt:init:service": [
       {
         "class": "supporting",
         "note": "Init behavior required for basic networking.",
-        "phase": "04"
+        "step": "M04"
       },
       {
         "class": "supporting",
         "note": "Service closure.",
-        "phase": "11"
+        "step": "M11"
       }
     ],
     "openwrt:network:defaults": [
       {
         "class": "primary",
         "note": "Default network config.",
-        "phase": "04"
+        "step": "M04"
       },
       {
         "class": "primary",
-        "note": "Recheck defaults after all phases.",
-        "phase": "11"
+        "note": "Recheck defaults during release validation.",
+        "step": "M11"
       }
     ],
     "openwrt:package:device-packages": [
       {
         "class": "primary",
         "note": "Device package list.",
-        "phase": "01"
+        "step": "M01"
       }
     ],
     "openwrt:package:kernel-modules": [
       {
         "class": "primary",
         "note": "Kernel module package closure.",
-        "phase": "01"
+        "step": "M01"
       },
       {
         "class": "primary",
         "note": "Recheck package closure.",
-        "phase": "11"
+        "step": "M11"
       }
     ],
     "source:feeds:base-feed-config": [
       {
         "class": "primary",
         "note": "Feed baseline review.",
-        "phase": "00"
+        "step": "M00"
       }
     ],
     "source:tree:metadata": [
       {
         "class": "primary",
         "note": "Source metadata and repo-level noise.",
-        "phase": "00"
+        "step": "M00"
       }
     ],
     "storage:factory-data:nvmem": [
       {
         "class": "primary",
         "note": "Factory data storage source.",
-        "phase": "03"
+        "step": "M03"
       }
     ],
     "storage:partition:rootfs": [
       {
         "class": "primary",
         "note": "Rootfs partition references for boot.",
-        "phase": "02"
+        "step": "M02"
       }
     ],
     "storage:spi-nand:boot": [
       {
         "class": "primary",
         "note": "SPI-NAND boot support.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "storage:spi-nand:ubi": [
       {
         "class": "primary",
         "note": "UBI layout.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "storage:spi-nor:boot": [
       {
         "class": "review-only",
         "note": "Review before applying to 8X.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "storage:sysupgrade:backup-restore": [
       {
         "class": "primary",
         "note": "Backup and restore behavior.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "storage:sysupgrade:compatibility": [
       {
         "class": "primary",
         "note": "Compatibility checks.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "storage:sysupgrade:platform": [
       {
         "class": "primary",
         "note": "Platform sysupgrade.",
-        "phase": "10"
+        "step": "M10"
       }
     ],
     "thermal:fan:pwm": [
       {
         "class": "primary",
         "note": "Fan runtime behavior.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "ui:button:reset": [
       {
         "class": "primary",
         "note": "Reset button behavior.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "ui:button:wps": [
       {
         "class": "primary",
         "note": "WPS button behavior.",
-        "phase": "09"
+        "step": "M09"
       }
     ],
     "wireless:calibration:eeprom": [
       {
         "class": "primary",
         "note": "Wi-Fi calibration EEPROM.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "wireless:hostapd:build": [
       {
         "class": "review-only",
         "note": "Split before migration; broad bucket.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:hostapd:ucode": [
       {
         "class": "primary",
         "note": "hostapd ucode integration.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:mac80211:patch": [
       {
         "class": "review-only",
         "note": "Split before migration; broad bucket.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:mlo:config": [
       {
         "class": "primary",
         "note": "MLO config behavior.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:mlo:runtime": [
       {
         "class": "primary",
         "note": "MLO runtime behavior.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:mt76:driver": [
       {
         "class": "primary",
         "note": "mt76 driver changes; inspect for 8X applicability.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "wireless:mt76:eeprom": [
       {
         "class": "primary",
         "note": "mt76 EEPROM path.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "wireless:mt76:firmware": [
       {
         "class": "primary",
         "note": "Wi-Fi firmware.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "wireless:pcie:nic": [
       {
         "class": "primary",
         "note": "PCIe Wi-Fi NIC.",
-        "phase": "06"
+        "step": "M06"
       }
     ],
     "wireless:regulatory:db": [
       {
         "class": "primary",
         "note": "Regulatory behavior; high review burden.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:wed:runtime": [
       {
         "class": "primary",
         "note": "Wireless WED runtime.",
-        "phase": "08"
+        "step": "M08"
       }
     ],
     "wireless:wifi-scripts:netifd": [
       {
         "class": "primary",
         "note": "netifd Wi-Fi scripts.",
-        "phase": "07"
+        "step": "M07"
       }
     ],
     "wireless:wifi-scripts:ucode": [
       {
         "class": "primary",
         "note": "Wi-Fi ucode scripts.",
-        "phase": "07"
+        "step": "M07"
       }
     ]
-  }
+  },
+  "migration_steps": [
+    {
+      "id": "M00",
+      "slug": "vendor-evidence-and-polarity-gate",
+      "title": "Vendor Evidence And Polarity Gate"
+    },
+    {
+      "id": "M01",
+      "slug": "clean-build-and-image-skeleton",
+      "title": "Clean Build And Image Skeleton"
+    },
+    {
+      "id": "M02",
+      "slug": "sd-boot-no-install",
+      "title": "SD Boot No Install"
+    },
+    {
+      "id": "M03",
+      "slug": "board-identity-power-i2c-gpio-factory-data",
+      "title": "Board Identity, Power, I2C, GPIO, Factory Data"
+    },
+    {
+      "id": "M04",
+      "slug": "basic-wired-management",
+      "title": "Basic Wired Management"
+    },
+    {
+      "id": "M05",
+      "slug": "full-wired-switch-sfp-and-10g",
+      "title": "Full Wired Switch, SFP, And 10G"
+    },
+    {
+      "id": "M06",
+      "slug": "basic-wifi-hardware",
+      "title": "Basic Wi-Fi Hardware"
+    },
+    {
+      "id": "M07",
+      "slug": "wireless-userspace-mlo-afc-and-policy",
+      "title": "Wireless Userspace, MLO, AFC, And Policy"
+    },
+    {
+      "id": "M08",
+      "slug": "acceleration-and-offload",
+      "title": "Acceleration And Offload"
+    },
+    {
+      "id": "M09",
+      "slug": "board-extras-and-expansion",
+      "title": "Board Extras And Expansion"
+    },
+    {
+      "id": "M10",
+      "slug": "onboard-storage-install-and-sysupgrade",
+      "title": "Onboard Storage, Install, And Sysupgrade"
+    },
+    {
+      "id": "M11",
+      "slug": "release-validation",
+      "title": "Release Validation"
+    }
+  ],
+  "purpose": "Map Project Phase 1a feature-routing tags to migration roadmap steps. This map is an inspection index, not a final migration decision.",
+  "schema_version": 1,
+  "source_documents": [
+    "migration_roadmap.md",
+    "feature_migration_step_map.md"
+  ],
+  "universal_gates": [
+    "context",
+    "polarity",
+    "unreported-minimalism",
+    "migration-step-boundary"
+  ]
 }

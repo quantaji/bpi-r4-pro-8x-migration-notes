@@ -2,7 +2,7 @@
 
 Archived on 2026-06-08.
 
-This skill is not used for the current Phase 1a feature-routing pass. Phase 1a
+This skill is not used for the current Project Phase 1a feature-routing pass. Project Phase 1a
 now routes files by `feature_tags` only, using `feature_routing_skill.md`,
 `rules/feature-tags-v1.json`, and `rules/feature-seed-rules-v1.json`.
 

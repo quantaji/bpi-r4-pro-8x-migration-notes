@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This skill defines Phase 1a feature routing for the BPI-R4 Pro 8X migration.
+This skill defines Project Phase 1a feature routing for the BPI-R4 Pro 8X migration.
 
 The goal is to assign one or more `feature_tags` to each changed file in the
 `8x-vs-openwrt24-base` diffset so later cluster work can answer:
@@ -12,8 +12,8 @@ which files should I inspect for this migration feature?
 which migration features does this changed file touch?
 ```
 
-This phase does not decide provenance, applicability, migration action, or final
-patch structure.
+Project Phase 1a does not decide provenance, applicability, migration action,
+or final patch structure.
 
 Do not output or store:
 
@@ -46,7 +46,7 @@ files/<changed-path>.patch
 
 The per-file patch under `files/` is the preferred input for routing.
 
-Reference source trees are not required for normal Phase 1a routing. Use them
+Reference source trees are not required for normal Project Phase 1a routing. Use them
 only if a file cannot be routed from path, status, file kind, patch subject, or
 inner patch targets.
 
@@ -72,7 +72,7 @@ The routing unit is a changed file.
 
 A file may have multiple `feature_tags`.
 
-Do not split by hunk in Phase 1a. If a file is clearly multi-purpose, attach
+Do not split by hunk in Project Phase 1a. If a file is clearly multi-purpose, attach
 multiple feature tags and mark it for review.
 
 Examples:
@@ -243,7 +243,7 @@ tag and mark `needs_review = true`.
 
 ## 9. DTS Files
 
-DTS, DTSI, and DTSO files should be routed at file level in Phase 1a.
+DTS, DTSI, and DTSO files should be routed at file level in Project Phase 1a.
 
 Use broad tags from filename, path, and obvious node keywords:
 
@@ -260,7 +260,7 @@ dts:thermal:zone
 dts:fan:pwm
 ```
 
-Do not attempt full hardware interpretation in Phase 1a. Exact node semantics
+Do not attempt full hardware interpretation in Project Phase 1a. Exact node semantics
 belong to the DTS cluster.
 
 ## 10. Deleted Files
@@ -280,7 +280,7 @@ deleted repo metadata:
     source:tree:metadata
 ```
 
-Do not store `deletion_reason` in Phase 1a.
+Do not store `deletion_reason` in Project Phase 1a.
 
 ## 11. Rename / Copy
 
@@ -322,7 +322,7 @@ is opened.
 
 ## 13. Final Checks
 
-Before accepting Phase 1a output:
+Before accepting Project Phase 1a output:
 
 ```text
 1. Every changed file has a files.jsonl record.

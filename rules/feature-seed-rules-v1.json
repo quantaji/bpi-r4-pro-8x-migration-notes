@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Mechanical seed rules for Phase 1a feature routing. Rules are cumulative; later review may add or remove assignments.",
+  "purpose": "Mechanical seed rules for Project Phase 1a feature routing. Rules are cumulative; later review may add or remove assignments.",
   "rules": [
     {
       "id": "repo-metadata",

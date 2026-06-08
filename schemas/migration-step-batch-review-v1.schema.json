@@ -1,18 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Phase Batch Review Record",
+  "title": "Migration Step Batch Review Record",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "diffset",
-    "phase",
+    "migration_step",
     "file_id",
     "status",
     "path",
     "features",
     "disposition",
-    "owner_phase",
+    "owner_step",
     "evidence_summary",
     "minimalism_gate"
   ],
@@ -23,9 +23,9 @@
     "diffset": {
       "type": "string"
     },
-    "phase": {
+    "migration_step": {
       "type": "string",
-      "pattern": "^[0-9]{2}$"
+      "pattern": "^M[0-9]{2}$"
     },
     "file_id": {
       "type": "string",
@@ -73,9 +73,9 @@
         "needs-evidence"
       ]
     },
-    "owner_phase": {
+    "owner_step": {
       "type": "string",
-      "pattern": "^[0-9]{2}$"
+      "pattern": "^M[0-9]{2}$"
     },
     "evidence_summary": {
       "type": "string",

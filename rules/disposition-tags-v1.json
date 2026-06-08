@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "purpose": "Allowed disposition tags for phase batch reviews. A disposition records how a changed file or semantic change should be handled in the current migration phase.",
+  "purpose": "Allowed disposition tags for migration-step batch reviews. A disposition records how a changed file or semantic change should be handled in the current migration step.",
   "dispositions": {
     "migrate": {
       "meaning": "Preserve and migrate the semantic behavior. The vendor implementation appears directionally sound, but it must still be expressed in the target OpenWrt 25.12 structure.",
@@ -15,7 +15,7 @@
       "requires_todo": false
     },
     "defer": {
-      "meaning": "Do not handle in the current phase. A later named phase owns the follow-up.",
+      "meaning": "Do not handle in the current migration step. A later named migration step owns the follow-up.",
       "requires_todo": true
     },
     "static-only": {
@@ -23,7 +23,7 @@
       "requires_todo": true
     },
     "review-only": {
-      "meaning": "Use as evidence or background only. It does not directly produce a migration action in the current phase.",
+      "meaning": "Use as evidence or background only. It does not directly produce a migration action in the current migration step.",
       "requires_todo": false
     },
     "superseded-by-target": {
@@ -31,12 +31,12 @@
       "requires_todo": false
     },
     "needs-evidence": {
-      "meaning": "Evidence is insufficient for a final disposition. The missing evidence and owning phase must be recorded.",
+      "meaning": "Evidence is insufficient for a final disposition. The missing evidence and owning migration step must be recorded.",
       "requires_todo": true
     }
   },
   "unreported_minimalism_gate": {
     "required_for_every_review": true,
-    "failure_condition": "A minimal or incomplete action was accepted without reporting why, naming missing evidence, assigning an owner phase, and recording a TODO."
+    "failure_condition": "A minimal or incomplete action was accepted without reporting why, naming missing evidence, assigning an owning migration step, and recording a TODO."
   }
 }

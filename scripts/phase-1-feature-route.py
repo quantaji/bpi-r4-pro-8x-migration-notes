@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Phase 1a feature-routing seed output from a diffset."""
+"""Generate Project Phase 1a feature-routing seed output from a diffset."""
 
 from __future__ import annotations
 
@@ -497,7 +497,7 @@ def write_manifest(out_dir: Path, diffset: Path, diff_id: str, rules_dir: Path, 
     manifest = [
         f'diff_id: "{diff_id}"',
         f'diffset: "{diffset}"',
-        'phase: "1a-feature-routing"',
+        'project_phase: "1a-feature-routing"',
         'schema: "feature-routing-v1"',
         f'rules_dir: "{rules_dir}"',
         f'created_at_utc: "{datetime.now(timezone.utc).isoformat()}"',

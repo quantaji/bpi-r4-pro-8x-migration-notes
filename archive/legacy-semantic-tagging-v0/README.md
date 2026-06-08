@@ -9,8 +9,8 @@ tag_rules.md
 patch_tagging_skill.md
 ```
 
-These files are not the entry point for the current Phase 1a workflow.
-Current Phase 1a output stores only feature routing tags and is driven by:
+These files are not the entry point for the current Project Phase 1a workflow.
+Current Project Phase 1a output stores only feature routing tags and is driven by:
 
 ```text
 feature_routing_skill.md

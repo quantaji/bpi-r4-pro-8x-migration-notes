@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "purpose": "Allowed feature tags for Phase 1a feature routing. This list intentionally excludes origin, scope, and mtk_version.",
+  "purpose": "Allowed feature tags for Project Phase 1a feature routing. This list intentionally excludes origin, scope, and mtk_version.",
   "allowed_tags": [
     "source:tree:metadata",
     "source:tree:cleanup",

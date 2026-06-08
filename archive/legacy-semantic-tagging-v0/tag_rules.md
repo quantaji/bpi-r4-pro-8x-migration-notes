@@ -2,8 +2,8 @@
 
 Archived on 2026-06-08.
 
-This document is not used for the current Phase 1a feature-routing pass.
-Phase 1a now assigns only `feature_tags` with `feature_routing_skill.md`,
+This document is not used for the current Project Phase 1a feature-routing pass.
+Project Phase 1a now assigns only `feature_tags` with `feature_routing_skill.md`,
 `rules/feature-tags-v1.json`, and `rules/feature-seed-rules-v1.json`.
 
 The `origin`, `scope`, and related semantic tagging model below is kept only as

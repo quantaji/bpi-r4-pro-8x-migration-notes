@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Phase 1a Feature Routing Record",
-  "description": "Schema for records emitted by Phase 1a feature routing. origin, scope, and mtk_version are intentionally forbidden.",
+  "title": "Project Phase 1a Feature Routing Record",
+  "description": "Schema for records emitted by Project Phase 1a feature routing. origin, scope, and mtk_version are intentionally forbidden.",
   "oneOf": [
     { "$ref": "#/definitions/file_record" },
     { "$ref": "#/definitions/assignment_record" }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Phase 1a feature-routing output."""
+"""Validate Project Phase 1a feature-routing output."""
 
 from __future__ import annotations
 

@@ -1,20 +1,20 @@
-# Feature To Phase Roadmap
+# Feature To Migration Step Map
 
-This file maps Phase 1a feature-routing tags to the migration phases in `migration_roadmap.md`.
+This file maps Project Phase 1a feature-routing tags to the migration steps in `migration_roadmap.md`.
 
 The map is an inspection index, not a migration decision. Each feature cluster still needs evidence review before code is migrated.
 
 ## Review Classes
 
-`primary`: core feature for the phase.
+`primary`: core feature for the migration step.
 
-`supporting`: may be needed by the phase but should not drive design alone.
+`supporting`: may be needed by the migration step but should not drive design alone.
 
 `review-only`: inspect for applicability, deletion semantics, or provenance before migration.
 
 `static-only`: represent static topology or package support, but runtime validation is not available with current hardware.
 
-`deferred`: intentionally postponed until a later phase or until evidence is available.
+`deferred`: intentionally postponed until a later migration step or until evidence is available.
 
 ## Mandatory Check For Every Feature
 
@@ -23,12 +23,12 @@ Every feature review must run the Unreported Minimalism Gate:
 1. Did the proposed action choose the smallest local change without reading context?
 2. Did it preserve vendor structure only because it was convenient?
 3. Did it skip a relevant 8X vendor, vendor-family, MTK, or target OpenWrt file?
-4. Did it silently leave current-phase behavior incomplete?
-5. Did it pull in next-phase behavior without declaring the boundary?
+4. Did it silently leave current-step behavior incomplete?
+5. Did it pull in next-step behavior without declaring the boundary?
 
-If yes, the review must either reject the action or record why the minimal form is accepted, which evidence is missing, which phase owns the follow-up, and where the TODO is stored.
+If yes, the review must either reject the action or record why the minimal form is accepted, which evidence is missing, which migration step owns the follow-up, and where the TODO is stored.
 
-## Phase 00: Vendor Evidence And Polarity Gate
+## Migration Step M00: Vendor Evidence And Polarity Gate
 
 Primary:
 
@@ -45,9 +45,9 @@ Review-only:
 | `network:phy:generic` | 80 | review-only | Inspect only when tied to 8X network evidence. |
 | `network:phy:multi-rate` | 123 | review-only | Large PHY cluster; split before migration. |
 | `wireless:mac80211:patch` | 313 | review-only | Broad wireless patch bucket; inspect polarity and applicability first. |
-| `wireless:hostapd:build` | 277 | review-only | Broad hostapd build bucket; split in Phase 07. |
+| `wireless:hostapd:build` | 277 | review-only | Broad hostapd build bucket; split in Migration Step M07. |
 
-## Phase 01: Clean Build And Image Skeleton
+## Migration Step M01: Clean Build And Image Skeleton
 
 Primary:
 
@@ -70,13 +70,13 @@ Primary:
 | `build:kernel:config` | 5 | supporting | Kernel config fragments. |
 | `build:toolchain:config` | 2 | review-only | Usually not board-specific; review before accepting. |
 
-## Phase 02: SD Boot No Install
+## Migration Step M02: SD Boot No Install
 
 Primary:
 
 | Feature tag | Count | Class | Notes |
 | --- | ---: | --- | --- |
-| `dts:overlay:storage` | 24 | primary | SD/eMMC/NAND overlays; only SD path is active in this phase. |
+| `dts:overlay:storage` | 24 | primary | SD/eMMC/NAND overlays; only SD path is active in this migration step. |
 | `storage:partition:rootfs` | 5 | primary | Rootfs partition references for boot. |
 | `boot:uboot:env` | 2 | primary | SD boot environment review. |
 | `boot:uboot:bootmenu` | 1 | primary | Review menu actions, but do not use install entries. |
@@ -84,14 +84,14 @@ Primary:
 | `boot:recovery:failsafe` | 4 | supporting | Boot safety only; not factory install. |
 | `identity:uboot-env:ethaddr` | 1 | supporting | Use only if needed for early boot identity. |
 
-Deferred from this phase:
+Deferred from this migration step:
 
 | Feature tag | Count | Class | Notes |
 | --- | ---: | --- | --- |
-| `boot:uboot:storage-layout` | 1 | deferred | Persistent install layout belongs to Phase 10. |
-| `boot:recovery:factory-install` | 2 | deferred | Factory install belongs to Phase 10. |
+| `boot:uboot:storage-layout` | 1 | deferred | Persistent install layout belongs to Migration Step M10. |
+| `boot:recovery:factory-install` | 2 | deferred | Factory install belongs to Migration Step M10. |
 
-## Phase 03: Board Identity, Power, I2C, GPIO, Factory Data
+## Migration Step M03: Board Identity, Power, I2C, GPIO, Factory Data
 
 Primary:
 
@@ -108,9 +108,9 @@ Primary:
 | `dts:pinctrl:function` | 1 | supporting | Pinctrl ownership. |
 | `bus:gpio:controller` | 1 | supporting | GPIO ownership and conflicts. |
 | `bus:spi:controller` | 2 | supporting | SPI bus context before NAND install. |
-| `bus:mdio:controller` | 1 | supporting | MDIO bus context before full wired phase. |
+| `bus:mdio:controller` | 1 | supporting | MDIO bus context before full wired migration step. |
 
-## Phase 04: Basic Wired Management
+## Migration Step M04: Basic Wired Management
 
 Primary:
 
@@ -127,7 +127,7 @@ Primary:
 | `openwrt:firewall:defaults` | 1 | supporting | Default policy, not hardware proof. |
 | `openwrt:init:service` | 8 | supporting | Init behavior required for basic networking. |
 
-## Phase 05: Full Wired Switch, SFP, And 10G
+## Migration Step M05: Full Wired Switch, SFP, And 10G
 
 Primary:
 
@@ -151,7 +151,7 @@ Primary:
 | `network:combo:sfp-rj45` | 1 | primary | SFP/RJ45 combo behavior. |
 | `dts:overlay:network` | 30 | supporting | Network overlays; inspect against direct 8X topology. |
 
-## Phase 06: Basic Wi-Fi Hardware
+## Migration Step M06: Basic Wi-Fi Hardware
 
 Primary:
 
@@ -169,7 +169,7 @@ Primary:
 | `firmware:wifi:runtime` | 34 | primary | Runtime Wi-Fi firmware. |
 | `openwrt:hotplug:wifi` | 7 | supporting | Hotplug needed for radio init. |
 
-## Phase 07: Wireless Userspace, MLO, AFC, And Policy
+## Migration Step M07: Wireless Userspace, MLO, AFC, And Policy
 
 Primary:
 
@@ -184,7 +184,7 @@ Primary:
 | `wireless:hostapd:build` | 277 | review-only | Split before migration; broad bucket. |
 | `wireless:mac80211:patch` | 313 | review-only | Split before migration; broad bucket. |
 
-## Phase 08: Acceleration And Offload
+## Migration Step M08: Acceleration And Offload
 
 Primary:
 
@@ -200,7 +200,7 @@ Primary:
 | `accel:tops:tunnel-offload` | 1 | primary | TOPS tunnel offload. |
 | `accel:crypto:eip` | 3 | review-only | Only migrate if required and justified. |
 
-## Phase 09: Board Extras And Expansion
+## Migration Step M09: Board Extras And Expansion
 
 Primary:
 
@@ -223,7 +223,7 @@ Primary:
 | `expansion:m2-bkey:cellular` | 1 | static-only | Static expansion mapping. |
 | `expansion:minipcie:cellular` | 1 | static-only | Static expansion mapping. |
 
-## Phase 10: Onboard Storage, Install, And Sysupgrade
+## Migration Step M10: Onboard Storage, Install, And Sysupgrade
 
 Primary:
 
@@ -232,7 +232,7 @@ Primary:
 | `storage:spi-nand:boot` | 3 | primary | SPI-NAND boot support. |
 | `storage:spi-nand:ubi` | 3 | primary | UBI layout. |
 | `storage:spi-nor:boot` | 2 | review-only | Review before applying to 8X. |
-| `dts:partition:layout` | 17 | primary | Persistent partition layout; SD rootfs-only handling is Phase 02. |
+| `dts:partition:layout` | 17 | primary | Persistent partition layout; SD rootfs-only handling is Migration Step M02. |
 | `storage:sysupgrade:platform` | 4 | primary | Platform sysupgrade. |
 | `storage:sysupgrade:backup-restore` | 1 | primary | Backup and restore behavior. |
 | `storage:sysupgrade:compatibility` | 1 | primary | Compatibility checks. |
@@ -241,7 +241,7 @@ Primary:
 | `boot:uboot:storage-layout` | 1 | primary | U-Boot persistent storage layout. |
 | `boot:uboot:recovery` | 1 | primary | Recovery path after persistent storage work. |
 
-## Phase 11: Release Validation
+## Migration Step M11: Release Validation
 
 Primary:
 
@@ -251,21 +251,21 @@ Primary:
 | `openwrt:package:kernel-modules` | 4 | primary | Recheck package closure. |
 | `image:factory-image` | 4 | primary | Recheck factory artifacts. |
 | `image:sysupgrade-image` | 6 | primary | Recheck sysupgrade artifacts. |
-| `openwrt:network:defaults` | 9 | primary | Recheck defaults after all phases. |
+| `openwrt:network:defaults` | 9 | primary | Recheck defaults during release validation. |
 | `openwrt:init:service` | 8 | supporting | Service closure. |
 
-## Cross-Phase Tags
+## Cross-Step Tags
 
-These tags intentionally appear in more than one phase and must be resolved by evidence in the local cluster:
+These tags intentionally appear in more than one migration step and must be resolved by evidence in the local cluster:
 
-| Feature tag | Primary phases | Reason |
+| Feature tag | Primary migration steps | Reason |
 | --- | --- | --- |
-| `dts:overlay:storage` | Phase 02, Phase 10 | SD boot early, NAND/eMMC install late. |
-| `boot:uboot:recovery` | Phase 02, Phase 10 | SD safety early, persistent recovery late. |
-| `image:factory-image` | Phase 01, Phase 11 | Build artifact early, release validation late. |
-| `image:sysupgrade-image` | Phase 10, Phase 11 | Storage migration then final validation. |
-| `openwrt:network:defaults` | Phase 04, Phase 11 | Basic management then final closure. |
-| `openwrt:package:kernel-modules` | Phase 01, Phase 11 | Build closure then final package closure. |
+| `dts:overlay:storage` | Migration Step M02, Migration Step M10 | SD boot early, NAND/eMMC install late. |
+| `boot:uboot:recovery` | Migration Step M02, Migration Step M10 | SD safety early, persistent recovery late. |
+| `image:factory-image` | Migration Step M01, Migration Step M11 | Build artifact early, release validation late. |
+| `image:sysupgrade-image` | Migration Step M10, Migration Step M11 | Storage migration then final validation. |
+| `openwrt:network:defaults` | Migration Step M04, Migration Step M11 | Basic management then final closure. |
+| `openwrt:package:kernel-modules` | Migration Step M01, Migration Step M11 | Build closure then final package closure. |
 
 ## Tags Requiring Manual Split Before Migration
 
@@ -282,5 +282,5 @@ For each broad tag, split files by:
 
 1. `A/M/D/R` polarity,
 2. direct 8X evidence versus MTK-wide or upstream-wide behavior,
-3. runtime necessity for the current phase,
+3. runtime necessity for the current migration step,
 4. risk of preserving vendor shortcuts.
