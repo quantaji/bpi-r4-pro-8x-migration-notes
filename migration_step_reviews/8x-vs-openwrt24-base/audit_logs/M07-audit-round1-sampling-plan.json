@@ -1,0 +1,507 @@
+{
+  "agents": [
+    {
+      "low_risk_ids": [
+        "000105",
+        "000158",
+        "000196",
+        "000306",
+        "000334",
+        "000566",
+        "000582",
+        "000622",
+        "000683",
+        "000780"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "drop",
+          "file_id": "000105",
+          "group": "M07-mac80211-non-8X-driver-family/ath9k",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/ath9k/544-ath9k-ar933x-usb-hang-workaround.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000158",
+          "group": "M07-mac80211-non-8X-driver-family/rt2x00",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rt2x00/602-04-wifi-rt2x00-Support-EEPROM-swap-binding.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000196",
+          "group": "M07-mac80211-non-8X-driver-family/rtl",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rtl/038-v6.13-wifi-rtw88-8812a-Mitigate-beacon-loss.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000306",
+          "group": "M07-mac80211-subsys-core-cfg80211-nl80211-mac80211",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/0097-mtk-mac80211-update-scan-req-to-skip-prohibited-band.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000334",
+          "group": "M07-mac80211-deleted-openwrt-churn",
+          "owner_step": "M11",
+          "path": "package/kernel/mac80211/patches/subsys/334-wifi-cfg80211-pass-net_device-to-.set_monitor_channel.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000566",
+          "group": "M07-hostapd-per-link-auth-deauth-key",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0054-mtk-wpa_supplicant-correctly-get-assoc-frequency.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000582",
+          "group": "M07-hostapd-MLO-MLD-base",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0070-mtk-hostapd-make-sure-all-links-are-set-before-enabl.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000622",
+          "group": "M07-hostapd-WDS-4addr-extender",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0109-mtk-hostapd-Fix-hostapd-crash-in-wds-mode-during-fre.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000683",
+          "group": "M07-hostapd-QoS-SCS-MSCS-EPCS",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0169-mtk-hostapd-add-hostapd_eid_wmm_len.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000780",
+          "group": "M07-hostapd-target-superseded-or-deleted-openwrt-churn",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/src/src/utils/ucode.c",
+          "status": "D"
+        }
+      ],
+      "name": "M07-audit-round1-agent-1"
+    },
+    {
+      "low_risk_ids": [
+        "000061",
+        "000077",
+        "000172",
+        "000260",
+        "000328",
+        "000340",
+        "000619",
+        "000638",
+        "000667",
+        "000764"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "drop",
+          "file_id": "000061",
+          "group": "M07-mac80211-non-8X-driver-family/ath",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/ath/406-ath_relax_default_regd.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000077",
+          "group": "M07-mac80211-non-8X-driver-family/ath11k",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/ath11k/905-ath11k-remove-intersection-support-for-regulatory-ru.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000172",
+          "group": "M07-mac80211-non-8X-driver-family/rt2x00",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rt2x00/621-04-rt2x00-fix-register-operation-on-RXIQ-calibration.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000260",
+          "group": "M07-mac80211-MLO-MLD-TTLM-EMLSR-core",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/0051-mtk-mac80211-Do-MLD-address-translation-before-STA-p.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000328",
+          "group": "M07-mac80211-deleted-openwrt-churn",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/310-cfg80211-allow-grace-period-for-DFS-available-after-.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000340",
+          "group": "M07-mac80211-deleted-openwrt-churn",
+          "owner_step": "M11",
+          "path": "package/kernel/mac80211/patches/subsys/340-wifi-cfg80211-report-per-wiphy-radio-antenna-mask.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000619",
+          "group": "M07-hostapd-DFS-CSA-background-radar-offchain",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0106-mtk-hostapd-fix-6G-EHT-BW-320-channel-switch-issue.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000638",
+          "group": "M07-hostapd-link-add-remove",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0124-mtk-hostapd-add-support-for-removeing-the-main-BSS.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000667",
+          "group": "M07-hostapd-per-link-auth-deauth-key",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0153-mtk-hostapd-Fix-reassoc-cb-can-t-get-STA-error.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000764",
+          "group": "M07-hostapd-target-superseded-or-deleted-openwrt-churn",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/720-iface_max_num_sta.patch",
+          "status": "D"
+        }
+      ],
+      "name": "M07-audit-round1-agent-2"
+    },
+    {
+      "low_risk_ids": [
+        "000083",
+        "000100",
+        "000116",
+        "000184",
+        "000265",
+        "000331",
+        "000526",
+        "000639",
+        "000663",
+        "000736"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "drop",
+          "file_id": "000083",
+          "group": "M07-mac80211-non-8X-driver-family/ath5k",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/ath5k/420-ath5k_disable_fast_cc.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000100",
+          "group": "M07-mac80211-non-8X-driver-family/ath9k",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/ath9k/530-ath9k_extra_leds.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000116",
+          "group": "M07-mac80211-non-8X-driver-family/brcm",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/brcm/812-b43-add-antenna-control.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000184",
+          "group": "M07-mac80211-non-8X-driver-family/rtl",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rtl/026-v6.13-wifi-rtw88-Allow-different-C2H-RA-report-sizes.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000265",
+          "group": "M07-mac80211-subsys-core-cfg80211-nl80211-mac80211",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/0056-mtk-mac80211-legacy-AP-scan-request-should-contain-v.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000331",
+          "group": "M07-mac80211-deleted-openwrt-churn",
+          "owner_step": "M11",
+          "path": "package/kernel/mac80211/patches/subsys/331-wifi-mac80211-use-vif-radio-mask-to-limit-ibss-scan-.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000526",
+          "group": "M07-hostapd-vendor-command-certification-debug-controls",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0014-mtk-hostapd-Add-three-wire-PTA-ctrl-hostapd-vendor-c.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000639",
+          "group": "M07-hostapd-link-add-remove",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0125-mtk-hostapd-add-support-for-enable-disable-single-BS.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000663",
+          "group": "M07-hostapd-ordinary-AP-WPA-SAE-RSNO-config-generation",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0149-mtk-hostapd-add-a-variable-of-type-struct-hostapd_in.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000736",
+          "group": "M07-hostapd-target-superseded-or-deleted-openwrt-churn",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/212-Move-definition-of-WLAN_SUPP_RATES_MAX-to-defs.h.patch",
+          "status": "D"
+        }
+      ],
+      "name": "M07-audit-round1-agent-3"
+    },
+    {
+      "low_risk_ids": [
+        "000175",
+        "000200",
+        "000249",
+        "000252",
+        "000332",
+        "000537",
+        "000563",
+        "000640",
+        "000672",
+        "000766"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "drop",
+          "file_id": "000175",
+          "group": "M07-mac80211-non-8X-driver-family/rt2x00",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rt2x00/994-rt2x00-import-support-for-external-LNA-on-MT7620.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000200",
+          "group": "M07-mac80211-non-8X-driver-family/rtl",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/rtl/042-v6.13-wifi-rtw88-Add-rtw8821a.-c-h.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000249",
+          "group": "M07-mac80211-subsys-core-cfg80211-nl80211-mac80211",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/0040-mtk-mac80211-fix-ieee80211_probe_client-warning.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000252",
+          "group": "M07-mac80211-DFS-CSA-radar-channel-policy",
+          "owner_step": "M07",
+          "path": "package/kernel/mac80211/patches/subsys/0043-mtk-cfg80211-rework-cac-started-cac-start-time-for-m.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000332",
+          "group": "M07-mac80211-deleted-openwrt-churn",
+          "owner_step": "M11",
+          "path": "package/kernel/mac80211/patches/subsys/332-wifi-mac80211-use-vif-radio-mask-to-limit-chanctx-an.patch",
+          "status": "D"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000537",
+          "group": "M07-hostapd-DFS-CSA-background-radar-offchain",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0025-mtk-hostapd-Fix-ZWDFS-issue-in-BW-160.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000563",
+          "group": "M07-hostapd-ordinary-AP-WPA-SAE-RSNO-config-generation",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0051-mtk-hostapd-remove-chan-freq-list-check-when-scan-re.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000640",
+          "group": "M07-hostapd-MLO-MLD-base",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0126-mtk-hostapd-add-support-for-removing-AP-MLD.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000672",
+          "group": "M07-hostapd-MBSSID-beacon-RNR-BPCC",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/0158-mtk-hostapd-fix-RNR-unsync-issue-after-channel-switc.patch",
+          "status": "A"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000766",
+          "group": "M07-hostapd-target-superseded-or-deleted-openwrt-churn",
+          "owner_step": "M07",
+          "path": "package/network/services/hostapd/patches/740-snoop_iface.patch",
+          "status": "D"
+        }
+      ],
+      "name": "M07-audit-round1-agent-4"
+    }
+  ],
+  "common_high_risk_ids": [
+    "000034",
+    "000035",
+    "000036",
+    "000225",
+    "000256",
+    "000289",
+    "000330",
+    "000497",
+    "000498",
+    "000499",
+    "000500",
+    "000501",
+    "000502",
+    "000503",
+    "000509",
+    "000510",
+    "000511",
+    "000512",
+    "000513",
+    "000514",
+    "000515",
+    "000516",
+    "000517",
+    "000518",
+    "000519",
+    "000520",
+    "000571",
+    "000616",
+    "000621",
+    "000646",
+    "000655",
+    "000677",
+    "000720",
+    "000746",
+    "000773",
+    "000782",
+    "000783",
+    "000787",
+    "000788",
+    "000789",
+    "000790",
+    "000791",
+    "000792",
+    "000793",
+    "000794",
+    "000795",
+    "000796",
+    "000797",
+    "000798",
+    "000799",
+    "000800",
+    "000801",
+    "000802",
+    "000803",
+    "000804",
+    "000805",
+    "000806",
+    "000807",
+    "000808",
+    "000809",
+    "000810"
+  ],
+  "coverage_summary": {
+    "by_batch": {
+      "Batch 1": 9,
+      "Batch 2": 9,
+      "Batch 3": 4,
+      "Batch 4": 6,
+      "Batch 5": 8,
+      "Batch 6": 4
+    },
+    "by_disposition": {
+      "defer": 4,
+      "drop": 12,
+      "needs-evidence": 18,
+      "review-only": 1,
+      "superseded-by-target": 5
+    },
+    "by_group": {
+      "M07-hostapd-DFS-CSA-background-radar-offchain": 2,
+      "M07-hostapd-MBSSID-beacon-RNR-BPCC": 1,
+      "M07-hostapd-MLO-MLD-base": 2,
+      "M07-hostapd-QoS-SCS-MSCS-EPCS": 1,
+      "M07-hostapd-WDS-4addr-extender": 1,
+      "M07-hostapd-link-add-remove": 2,
+      "M07-hostapd-ordinary-AP-WPA-SAE-RSNO-config-generation": 2,
+      "M07-hostapd-per-link-auth-deauth-key": 2,
+      "M07-hostapd-target-superseded-or-deleted-openwrt-churn": 4,
+      "M07-hostapd-vendor-command-certification-debug-controls": 1,
+      "M07-mac80211-DFS-CSA-radar-channel-policy": 1,
+      "M07-mac80211-MLO-MLD-TTLM-EMLSR-core": 1,
+      "M07-mac80211-deleted-openwrt-churn": 5,
+      "M07-mac80211-non-8X-driver-family/ath": 1,
+      "M07-mac80211-non-8X-driver-family/ath11k": 1,
+      "M07-mac80211-non-8X-driver-family/ath5k": 1,
+      "M07-mac80211-non-8X-driver-family/ath9k": 2,
+      "M07-mac80211-non-8X-driver-family/brcm": 1,
+      "M07-mac80211-non-8X-driver-family/rt2x00": 3,
+      "M07-mac80211-non-8X-driver-family/rtl": 3,
+      "M07-mac80211-subsys-core-cfg80211-nl80211-mac80211": 3
+    },
+    "low_risk_unique_count": 40
+  },
+  "generated_at": "2026-06-12T20:28:58.639693+00:00",
+  "round": "round1",
+  "seed": 10483572218159187842,
+  "step": "M07",
+  "validation": {
+    "each_agent_has_10_low_risk_rows": true,
+    "each_agent_has_at_least_one_row_from_each_available_batch": true,
+    "high_risk_ids_all_present": true,
+    "no_low_risk_duplicate_across_agents": true,
+    "no_low_risk_overlap_with_high_risk": true
+  }
+}
