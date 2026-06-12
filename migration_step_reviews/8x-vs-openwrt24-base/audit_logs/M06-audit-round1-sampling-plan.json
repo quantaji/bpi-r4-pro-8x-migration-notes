@@ -1,0 +1,267 @@
+{
+  "common_high_risk_excluded": [
+    "000343",
+    "000372",
+    "000380",
+    "000428",
+    "000858",
+    "000859",
+    "001135",
+    "001137",
+    "001138"
+  ],
+  "low_risk_pool_count": 146,
+  "low_risk_pool_strata": {
+    "debug_testmode_review_only": 20,
+    "firmware_package_closure": 28,
+    "hotplug_userspace_boundary": 7,
+    "m07_wireless_policy_handoff": 48,
+    "m08_offload_handoff": 6,
+    "m09_pcie_policy_handoff": 1,
+    "mt7988_rfb_supporting_reference": 5,
+    "non8x_dts_drop_or_reference": 9,
+    "other_drop": 6,
+    "remaining_m06_needs_evidence": 11,
+    "testmode_or_unused_firmware": 5
+  },
+  "samples": {
+    "M06-audit-round1-agent-1": {
+      "count": 7,
+      "file_ids": [
+        "000354",
+        "000424",
+        "000434",
+        "000442",
+        "000460",
+        "000461",
+        "000497"
+      ],
+      "rows": [
+        {
+          "disposition": "review-only",
+          "file_id": "000354",
+          "group": "M06-E-mt76-debug-testmode-review-only",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0011-mtk-mt76-mt7996-update-testmode-bf-support.patch",
+          "stratum": "debug_testmode_review_only"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000424",
+          "group": "M06-E-mt76-beacon-mbssid-policy-handoff",
+          "owner_step": "M07",
+          "path": "package/kernel/mt76/patches/0081-mtk-mt76-mt7996-fix-bcn-prot-hw-mode.patch",
+          "stratum": "m07_wireless_policy_handoff"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000434",
+          "group": "M06-E-mt76-non8x-or-unused-path",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0091-mtk-mt76-mt7990-add-mt7990-coredump-support.patch",
+          "stratum": "other_drop"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000442",
+          "group": "M06-D-testmode-or-unused-firmware",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/src/firmware/mt7996/mt7990_wm_tm.bin",
+          "stratum": "testmode_or_unused_firmware"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000460",
+          "group": "M06-D-firmware-target-closure",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/src/firmware/mt7996/mt7996_eeprom_233.bin",
+          "stratum": "firmware_package_closure"
+        },
+        {
+          "disposition": "superseded-by-target",
+          "file_id": "000461",
+          "group": "M06-D-firmware-target-closure",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/src/firmware/mt7996/mt7996_eeprom_233_2i5i6i.bin",
+          "stratum": "firmware_package_closure"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000497",
+          "group": "M06-G-hotplug-userspace-boundary",
+          "owner_step": "M07",
+          "path": "package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh",
+          "stratum": "hotplug_userspace_boundary"
+        }
+      ],
+      "strata": {
+        "debug_testmode_review_only": 1,
+        "firmware_package_closure": 2,
+        "hotplug_userspace_boundary": 1,
+        "m07_wireless_policy_handoff": 1,
+        "other_drop": 1,
+        "testmode_or_unused_firmware": 1
+      }
+    },
+    "M06-audit-round1-agent-2": {
+      "count": 7,
+      "file_ids": [
+        "000419",
+        "000421",
+        "000433",
+        "000500",
+        "000851",
+        "000860",
+        "001136"
+      ],
+      "rows": [
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000419",
+          "group": "M06-E-mt76-basic-bringup-needs-evidence",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0076-mtk-mt76-mt7996-add-sanity-check-for-rx-skb.patch",
+          "stratum": "remaining_m06_needs_evidence"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000421",
+          "group": "M06-E-mt76-offload-wed-handoff",
+          "owner_step": "M08",
+          "path": "package/kernel/mt76/patches/0078-mtk-mt76-mt7996-Add-sw-path-hwrro3.1-support.patch",
+          "stratum": "m08_offload_handoff"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000433",
+          "group": "M06-E-mt76-non8x-or-unused-path",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0090-mtk-mt76-mt7990-add-support-critical-packet-mode-for.patch",
+          "stratum": "other_drop"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000500",
+          "group": "M06-G-hotplug-userspace-boundary",
+          "owner_step": "M07",
+          "path": "package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc",
+          "stratum": "hotplug_userspace_boundary"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000851",
+          "group": "M06-A-non-8x-mt7987-r4lite-dts",
+          "owner_step": "M06",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite.dts",
+          "stratum": "non8x_dts_drop_or_reference"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000860",
+          "group": "M06-A-mt7988-rfb-wifi-pcie-reference",
+          "owner_step": "M06",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-emmc.dtso",
+          "stratum": "mt7988_rfb_supporting_reference"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "001136",
+          "group": "M06-F-pcie-controller-policy-handoff",
+          "owner_step": "M09",
+          "path": "target/linux/mediatek/patches-6.6/999-pcie-02-pcie-mediatek-gen3-Add-PCIe-IRQ-affinity-support.patch",
+          "stratum": "m09_pcie_policy_handoff"
+        }
+      ],
+      "strata": {
+        "hotplug_userspace_boundary": 1,
+        "m08_offload_handoff": 1,
+        "m09_pcie_policy_handoff": 1,
+        "mt7988_rfb_supporting_reference": 1,
+        "non8x_dts_drop_or_reference": 1,
+        "other_drop": 1,
+        "remaining_m06_needs_evidence": 1
+      }
+    },
+    "M06-audit-round1-agent-3": {
+      "count": 7,
+      "file_ids": [
+        "000348",
+        "000375",
+        "000407",
+        "000416",
+        "000456",
+        "000847",
+        "000878"
+      ],
+      "rows": [
+        {
+          "disposition": "defer",
+          "file_id": "000348",
+          "group": "M06-E-mt76-offload-wed-handoff",
+          "owner_step": "M08",
+          "path": "package/kernel/mt76/patches/0005-mtk-mt76-mt7996-Remove-wed_stop-during-L1-SER.patch",
+          "stratum": "m08_offload_handoff"
+        },
+        {
+          "disposition": "needs-evidence",
+          "file_id": "000375",
+          "group": "M06-E-mt76-basic-bringup-needs-evidence",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0032-mtk-mt76-mt7996-Fix-add-ba-related-issues.patch",
+          "stratum": "remaining_m06_needs_evidence"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000407",
+          "group": "M06-E-mt76-debug-testmode-review-only",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/patches/0064-mtk-mt76-mt7996-add-testmode-rx-gain-cal-support.patch",
+          "stratum": "debug_testmode_review_only"
+        },
+        {
+          "disposition": "defer",
+          "file_id": "000416",
+          "group": "M06-E-mt76-dfs-csa-policy-handoff",
+          "owner_step": "M07",
+          "path": "package/kernel/mt76/patches/0073-mtk-mt76-mt7996-rework-radar-rdd-idx.patch",
+          "stratum": "m07_wireless_policy_handoff"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000456",
+          "group": "M06-D-testmode-or-unused-firmware",
+          "owner_step": "M06",
+          "path": "package/kernel/mt76/src/firmware/mt7996/mt7992_wm_tm.bin",
+          "stratum": "testmode_or_unused_firmware"
+        },
+        {
+          "disposition": "drop",
+          "file_id": "000847",
+          "group": "M06-A-non-8x-mt7987-r4lite-dts",
+          "owner_step": "M06",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987.dtsi",
+          "stratum": "non8x_dts_drop_or_reference"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000878",
+          "group": "M06-A-mt7988-rfb-wifi-pcie-reference",
+          "owner_step": "M06",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988d-rfb.dts",
+          "stratum": "mt7988_rfb_supporting_reference"
+        }
+      ],
+      "strata": {
+        "debug_testmode_review_only": 1,
+        "m07_wireless_policy_handoff": 1,
+        "m08_offload_handoff": 1,
+        "mt7988_rfb_supporting_reference": 1,
+        "non8x_dts_drop_or_reference": 1,
+        "remaining_m06_needs_evidence": 1,
+        "testmode_or_unused_firmware": 1
+      }
+    }
+  },
+  "script_path": "/tmp/m06_lowrisk_sampler.py",
+  "seed": 16058559765735391962
+}
