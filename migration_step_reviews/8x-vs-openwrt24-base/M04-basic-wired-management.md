@@ -10,7 +10,7 @@ This review is part of Project Phase 2. It does not migrate code.
 
 ## Audit Status
 
-This file is the M04 main-agent draft batch review.
+This file is the M04 round3-audited batch review.
 
 Formal three-agent no-context audit status: completed through round 3 on 2026-06-08 PDT.
 
@@ -260,7 +260,7 @@ The TSV schema has one `owner_step` per file. Mixed-owner files are therefore ke
 
 ## Unreported Minimalism Gate
 
-Result: passed for the M04 main-agent draft after content checks.
+Result: passed for the M04 round3-audited review after content checks.
 
 Minimalism risks checked:
 

@@ -177,6 +177,10 @@ more owner-routing holes. Those findings were applied as follows:
 4. `001134` moved to M02 because FIT ramdisk/rootfs parsing can affect SD/recovery boot before onboard install work.
 5. `001124` remains M05 primary owner for DSA/switch behavior, but the TSV notes now require M08 to review its PPE/WED/offload hunks before acceleration is enabled.
 
+Traceability note: M00 predates the later standard of saving standalone raw
+audit logs under `audit_logs/`. That is a logging limitation, not evidence that
+the corrected M00 classifications are invalid.
+
 ## Secondary Review Handoffs
 
 The TSV schema has one `owner_step` per file. Mixed-owner files are therefore

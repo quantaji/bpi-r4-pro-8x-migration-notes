@@ -14,6 +14,11 @@ This file is the formally audited M01 batch review.
 
 Formal three-agent no-context audit status: completed on 2026-06-08.
 
+Traceability note: M01 predates the later standard of saving standalone raw
+audit logs under `audit_logs/`. The formal audit summary above records the
+reviewer IDs and verdicts; absence of standalone raw logs is a logging
+limitation, not evidence that the M01 classifications are invalid.
+
 Final no-context reviewers:
 
 | reviewer id | agent id | verdict |
@@ -252,7 +257,7 @@ kept under their primary owner and called out here.
 
 ## Unreported Minimalism Gate
 
-Result: passed for the main-agent M01 draft after content checks.
+Result: passed for the formally audited M01 review after content checks.
 
 Minimalism risks checked:
 
