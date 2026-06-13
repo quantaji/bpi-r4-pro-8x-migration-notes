@@ -1,0 +1,276 @@
+{
+  "agents": [
+    {
+      "low_risk_ids": [
+        "000876",
+        "000878",
+        "000873",
+        "000845",
+        "000842",
+        "000843",
+        "000861"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "review-only",
+          "file_id": "000876",
+          "group": "M10-supporting-MT7988D-network-overlay-route-bleed",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988d-rfb-eth0-gsw.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000878",
+          "group": "M10-supporting-MT7988D-RFB-storage-bootargs",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988d-rfb.dts",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000873",
+          "group": "M10-supporting-MT7988-RFB-SPI-NOR-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-spim-nor.dtso",
+          "status": "M"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000845",
+          "group": "M10-supporting-MT7987-SPI-NAND-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-spim-nand.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000842",
+          "group": "M10-supporting-MT7987-storage-pinctrl",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-pinctrl.dtsi",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000843",
+          "group": "M10-supporting-MT7987-SD-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-sd.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000861",
+          "group": "M10-supporting-RFB-network-overlay-route-bleed",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth0-gsw.dtso",
+          "status": "A"
+        }
+      ],
+      "name": "M10-audit-round1-agent-1"
+    },
+    {
+      "low_risk_ids": [
+        "000872",
+        "000875",
+        "000869",
+        "000870",
+        "000847",
+        "000851",
+        "000860"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "review-only",
+          "file_id": "000872",
+          "group": "M10-supporting-MT7988-RFB-SPI-NAND-NMBM-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-spim-nand-nmbm.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000875",
+          "group": "M10-supporting-MT7988-SoC-SPI-context",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a.dtsi",
+          "status": "M"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000869",
+          "group": "M10-supporting-RFB-board-storage-bootargs",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-mxl86252.dts",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000870",
+          "group": "M10-supporting-MT7988-RFB-SD-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-sd.dtso",
+          "status": "M"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000847",
+          "group": "M10-supporting-MT7987-SoC-storage-controller",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987.dtsi",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000851",
+          "group": "M10-supporting-R4Lite-storage-context",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite.dts",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000860",
+          "group": "M10-supporting-MT7988-RFB-eMMC-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-emmc.dtso",
+          "status": "M"
+        }
+      ],
+      "name": "M10-audit-round1-agent-2"
+    },
+    {
+      "low_risk_ids": [
+        "000832",
+        "000971",
+        "000829",
+        "000858",
+        "000852",
+        "000827",
+        "000846"
+      ],
+      "low_risk_rows": [
+        {
+          "disposition": "review-only",
+          "file_id": "000832",
+          "group": "M10-supporting-MT7987-network-overlay-route-bleed",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-netsys-eth0-an8855.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000971",
+          "group": "M10-supporting-MT7988D-RFB-image-extra",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/image/filogic-extra.mk",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000829",
+          "group": "M10-supporting-MT7987-eMMC-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-emmc.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000858",
+          "group": "M10-direct-8X-WiFi-overlay-route-bleed",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-8x-wifi-mt7996a.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000852",
+          "group": "M10-supporting-MT7987-RFB-storage-context",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-rfb.dts",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000827",
+          "group": "M10-supporting-non-8X-SPI-NOR-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7981-rfb-spim-nor.dtso",
+          "status": "A"
+        },
+        {
+          "disposition": "review-only",
+          "file_id": "000846",
+          "group": "M10-supporting-MT7987-SPI-NOR-layout",
+          "owner_step": "M10",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-spim-nor.dtso",
+          "status": "A"
+        }
+      ],
+      "name": "M10-audit-round1-agent-3"
+    }
+  ],
+  "common_high_risk_ids": [
+    "000028",
+    "000031",
+    "000033",
+    "000811",
+    "000812",
+    "000823",
+    "000855",
+    "000857",
+    "000859",
+    "000966",
+    "000969",
+    "000970",
+    "000972",
+    "001131",
+    "001132",
+    "001133",
+    "001141",
+    "001142",
+    "001143",
+    "001144",
+    "001145"
+  ],
+  "coverage_summary": {
+    "assigned_low_risk_duplicate_count": 0,
+    "assigned_low_risk_unique_count": 21,
+    "by_disposition": {
+      "review-only": 21
+    },
+    "by_group": {
+      "M10-direct-8X-WiFi-overlay-route-bleed": 1,
+      "M10-supporting-MT7987-RFB-storage-context": 1,
+      "M10-supporting-MT7987-SD-layout": 1,
+      "M10-supporting-MT7987-SPI-NAND-layout": 1,
+      "M10-supporting-MT7987-SPI-NOR-layout": 1,
+      "M10-supporting-MT7987-SoC-storage-controller": 1,
+      "M10-supporting-MT7987-eMMC-layout": 1,
+      "M10-supporting-MT7987-network-overlay-route-bleed": 1,
+      "M10-supporting-MT7987-storage-pinctrl": 1,
+      "M10-supporting-MT7988-RFB-SD-layout": 1,
+      "M10-supporting-MT7988-RFB-SPI-NAND-NMBM-layout": 1,
+      "M10-supporting-MT7988-RFB-SPI-NOR-layout": 1,
+      "M10-supporting-MT7988-RFB-eMMC-layout": 1,
+      "M10-supporting-MT7988-SoC-SPI-context": 1,
+      "M10-supporting-MT7988D-RFB-image-extra": 1,
+      "M10-supporting-MT7988D-RFB-storage-bootargs": 1,
+      "M10-supporting-MT7988D-network-overlay-route-bleed": 1,
+      "M10-supporting-R4Lite-storage-context": 1,
+      "M10-supporting-RFB-board-storage-bootargs": 1,
+      "M10-supporting-RFB-network-overlay-route-bleed": 1,
+      "M10-supporting-non-8X-SPI-NOR-layout": 1
+    },
+    "high_risk_count": 21,
+    "non_high_risk_pool_count": 22,
+    "tsv_rows": 43
+  },
+  "generated_at": "2026-06-13T02:42:18.975329+00:00",
+  "round": "round1",
+  "seed": 15427338649056343859,
+  "step": "M10",
+  "update_reason": "Expanded common high-risk list from audit launch prompt; retained prior low-risk assignments where still non-high-risk and filled replacements deterministically from the original seed.",
+  "updated_at": "2026-06-13T02:47:42.997789+00:00"
+}
