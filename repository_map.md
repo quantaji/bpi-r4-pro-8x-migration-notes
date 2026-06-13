@@ -9,7 +9,9 @@ trees and generated diffsets live one directory above this repository.
 ```text
 ./
 ├── archive/
+├── phase3_commit_notes/
 ├── migration_step_reviews/
+├── phase3_supervisor_notes/
 ├── rules/
 ├── schemas/
 ├── scripts/
@@ -27,6 +29,18 @@ Required workflow for Project Phase 3 implementation. It tells implementation
 agents how to reconstruct vendor behavior, compare it with OpenWrt 25.12
 structure, make design decisions, implement code, verify results, and pass the
 minimalism gate. Read it before writing migration code.
+
+#### `phase3_supervisor_notes`
+
+Supervisor-side Phase 3 design gates and boundary decisions. These notes are
+implementation guidance and review records, not Phase 2 audit matrices and not
+runtime validation evidence.
+
+#### `phase3_commit_notes`
+
+Commit-level Phase 3 implementation provenance. These notes map a work-repo
+commit hash to source/action decisions, validation commands, generated artifact
+hashes, deferred behavior, and residual risk.
 
 #### `phase3_external_issue_watchlist.md`
 
@@ -102,6 +116,13 @@ Reproducible helper scripts.
   audited P2 owner-step worklist, global handoff overlay, and provenance
   summaries. It writes flat M00-M11 and queue views under
   `../analysis/phase3-worklists/8x-vs-openwrt24-base/`.
+- `wrt-docker-build.sh` runs commands in the writable OpenWrt implementation
+  worktree through Docker. It uses OpenWrt's CI build container
+  `ghcr.io/openwrt/buildbot/buildworker-v3.8.0:v9` by default. For one-shot
+  containers it lets the image enter its normal `buildbot` user instead of
+  forcing `--user buildbot`, and explicitly uses Docker runtime `runc` so
+  CPU-only builds work on Hyper-V hosts where the Docker daemon default runtime
+  is NVIDIA.
 
 Example:
 
@@ -263,6 +284,28 @@ Current local source workspace:
     ├── BPI-R4PRO-4E-OPENWRT-V24.10.0-Master-Devel
     └── BPI-R4PRO-8X-OPENWRT-V24.10.0-Master-Devel
 ```
+
+Current implementation worktree:
+
+```text
+../worktrees/openwrt-bpi-r4-pro-8x
+```
+
+This is the writable OpenWrt fork used for Phase 3 implementation commits and
+build uploads. It is not a provenance/reference source; do not use it as
+evidence for vendor behavior or upstream coverage.
+
+Repository state recorded on 2026-06-13:
+
+- Remote: `git@github.com:quantaji/openwrt-bpi-r4-pro-8x-adaptation.git`
+- Baseline tag: `v25.12.4`
+- Baseline commit: `ba915c2ee711d047d5be8575c1e98699119429ab`
+- Development branch: `codex/bpi-r4-pro-8x-v25.12.4`
+- Remote branch: `origin/codex/bpi-r4-pro-8x-v25.12.4`
+
+Use this worktree for the initial OpenWrt 25.12.4 adaptation. Later upstream
+alignment should be prepared as a separate clean series against OpenWrt main or
+the current upstream target branch after the 25.12 migration has been validated.
 
 ### MTK Sources
 

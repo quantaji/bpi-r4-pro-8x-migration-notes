@@ -63,3 +63,18 @@ views under:
 ```text
 ../analysis/phase3-worklists/8x-vs-openwrt24-base/
 ```
+
+To run OpenWrt build commands for the implementation worktree in Docker:
+
+```sh
+scripts/wrt-docker-build.sh 'make defconfig'
+```
+
+The Docker runner uses OpenWrt's CI build container by default:
+`ghcr.io/openwrt/buildbot/buildworker-v3.8.0:v9`. For one-shot `docker run`,
+the script does not pass `--user` by default and lets the image enter its
+normal `buildbot` user with `HOME=/builder`. It also defaults to `--runtime
+runc` so it works on Hyper-V hosts where Docker's default NVIDIA runtime is
+unavailable. Override the image with `WRT_IMAGE=<image>`, override the user
+with `WRT_USER=<user>` if needed, or enter an already-running build container via
+`WRT_CONTAINER=<name-or-id>`.
