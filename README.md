@@ -10,6 +10,8 @@ Start with:
 - `migration_roadmap.md`: migration-step order M00-M11.
 - `phase3_implementation_protocol.md`: required workflow for Phase 3
   implementation, design review, verification, and commit acceptance.
+- `phase3_external_issue_watchlist.md`: external PR and observed issue
+  watchlist to check during Phase 3 implementation.
 - `migration_step_reviews/8x-vs-openwrt24-base/`: Project Phase 2 review
   matrices and global handoff closeout artifacts.
 

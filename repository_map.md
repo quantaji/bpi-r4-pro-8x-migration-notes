@@ -28,6 +28,14 @@ agents how to reconstruct vendor behavior, compare it with OpenWrt 25.12
 structure, make design decisions, implement code, verify results, and pass the
 minimalism gate. Read it before writing migration code.
 
+#### `phase3_external_issue_watchlist.md`
+
+External PR and observed issue watchlist for Project Phase 3. It records
+possible integration problems by migration step, including OpenWrt PR sources
+where applicable. It is warning evidence only; implementation agents must still
+verify each issue against direct 8X vendor source, target OpenWrt 25.12 source,
+hardware documents, and current runtime evidence before changing code.
+
 #### `migration_step_reviews/8x-vs-openwrt24-base`
 
 This directory stores Project Phase 2 review artifacts for the 8X vendor source
@@ -217,10 +225,22 @@ Meanings:
 - `deleted-rows.tsv`: deleted rows and rows with deleted-row provenance classes.
 - `run.json`: input paths, output paths, counts, and diagnostics.
 
+#### `analysis/external-evidence/openwrt-pr-21083-bpi-r4-pro-8x`
+
+Raw external evidence archive for OpenWrt PR #21083. It stores the PR metadata,
+diff, patch, changed-file list, issue comments, review comments, reviews, and
+timeline pages captured from GitHub.
+
+Use this archive to understand upstream integration discussion, review
+objections, and problem reports. Do not treat it as accepted upstream truth or
+as BPI-R4 Pro 8X hardware authority.
+
 Current local source workspace:
 
 ```text
 ./reference-source-codes
+├── external-prs
+│   └── openwrt-pr-21083-bpi-r4-pro-8x
 ├── MTK
 │   ├── mtk-openwrt-feeds
 │   ├── openwrt-21.02-mtk
@@ -352,6 +372,17 @@ Did a relevant PR already land after 25.12.4?
 ```
 
 Do not use OpenWrt main as the target baseline unless the project goal changes.
+
+### External PR Sources
+
+#### `external-prs/openwrt-pr-21083-bpi-r4-pro-8x`
+
+Checkout of the OpenWrt PR #21083 head branch for BPI-R4 Pro 8X board support.
+
+Use it as an external integration reference for patch organization, review
+context, and target-era design discussion. It is not merged upstream and must
+not override direct 8X vendor source, schematic evidence, or current target
+OpenWrt 25.12 API/structure.
 
 #### `upstreams/linux`
 
