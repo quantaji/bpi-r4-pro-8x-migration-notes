@@ -90,6 +90,64 @@ Use these terms consistently in designs, reports, and commit notes:
 - `drop`: intentionally not migrated.
 - `defer`: not migrated in this step; name the owner step.
 
+## Package And Kmod Ownership Gate
+
+Package and kmod choices are migration behavior. Treat them with the same
+source/action discipline as code files.
+
+Do not use vendor `.config`, old bootable project configs, PR package lists, or
+user-local build configs as design truth. They are clues only. Permanent default
+package choices must be represented in OpenWrt target metadata such as
+`DEVICE_PACKAGES` or package definitions, not by relying on the worktree
+`.config`.
+
+The worktree `.config` is a local build input. It may be cleaned or regenerated
+to remove stale overrides before validation, but it is not a migration artifact
+and must not be treated as proof that a package belongs to the device.
+
+Whenever a step adds, keeps, drops, or defers a package or kmod, the report must
+list:
+
+1. package or kmod name,
+2. source evidence,
+3. owning migration step,
+4. action: `add`, `keep`, `drop`, or `defer`,
+5. reason,
+6. final image manifest evidence when the package is added or claimed present.
+
+`make defconfig` is not package validation evidence by itself. If
+`DEVICE_PACKAGES`, default package closure, or package-related target metadata
+changes, validation must check all of:
+
+- `.config`,
+- `bin/targets/mediatek/filogic/config.buildinfo`,
+- the final image `.manifest` for the relevant device.
+
+If the final manifest does not contain a package that the step claims to add or
+requires for runtime behavior, the build evidence is invalid even if the build
+passed.
+
+Stage ownership for package and kmod decisions:
+
+| Step | Package/kmod ownership |
+|---|---|
+| `M01` | Build/profile/image skeleton only. Do not claim runtime package closure. |
+| `M02` | SD boot and no-install rootfs persistence only. For the current 8X SD min-boot path, `e2fsprogs`, `f2fsck`, and `mkf2fs` are allowed because `/dev/fitrw` needs userspace F2FS tooling; final manifest evidence should include their runtime dependency such as `libf2fs6`. `fitblk` and `fstools` must be present as FIT/rootdisk baseline evidence. Do not add Wi-Fi, SFP, PHY, USB, NVMe, LuCI, or broad debug packages in M02. |
+| `M03` | Board identity, factory data, and U-Boot env access. Add EEPROM/factory/env packages only when required by M03 evidence. |
+| `M04` | Basic wired management network. Add only packages needed for the proven management Ethernet path. |
+| `M05` | Full wired switch, SFP, 10G, and combo-port behavior, including PHY/SFP packages and firmware such as Aquantia or 2.5G PHY support when proven. |
+| `M06` | Wi-Fi hardware bring-up, radio enumeration, firmware, EEPROM/calibration, and PCIe radio detection. |
+| `M07` | Wireless userspace and policy, including `hostapd`, `wpad`, `iw`, MLO, AFC, DFS, and related scripts. |
+| `M08` | Acceleration and offload packages, including WED, HNAT, PPE, netfilter offload, WO firmware, and related runtime proof. |
+| `M09` | Board extras and expansion: USB, fan, RTC, GPIO expanders, LEDs, buttons, sensors, PCIe, and NVMe. |
+| `M10` | Storage, install, sysupgrade, NAND/eMMC/UBI behavior, `block-mount`, partition tools such as `blkid`, `fdisk`, `lsblk`, `partx-utils`, and storage write/install policy. |
+| `M11` | Final release/package closure, LuCI, optional debug/user-facing packages, and official runtime manifest completeness. |
+
+Do not add future-step packages early just because a vendor image includes
+them. If a package appears to be needed before its owner step, the agent must
+show the direct runtime failure or source evidence that makes it mandatory for
+the current step, then record the narrowed reason and residual owner step.
+
 ## Required Base Documents
 
 Agents must read these before a step-specific design:
