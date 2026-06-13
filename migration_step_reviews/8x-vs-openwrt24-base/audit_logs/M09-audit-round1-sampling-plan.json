@@ -1,0 +1,225 @@
+{
+  "step": "M09",
+  "round": "round1",
+  "seed": 15635464160973180574,
+  "generated_at": "2026-06-12T17:51:52-07:00",
+  "common_high_risk_ids": [
+    "000859",
+    "000875",
+    "000941",
+    "000942",
+    "000943",
+    "000944",
+    "000945",
+    "000946",
+    "000947",
+    "000948",
+    "000949",
+    "000950",
+    "000951",
+    "000952",
+    "000953",
+    "000954",
+    "000961",
+    "000963",
+    "001149",
+    "001150",
+    "001151"
+  ],
+  "agents": [
+    {
+      "name": "M09-audit-round1-agent-1",
+      "assigned_non_high_risk_ids": [
+        "000851",
+        "000869",
+        "000878",
+        "000858",
+        "000867",
+        "000872",
+        "000861"
+      ],
+      "assigned_non_high_risk_rows": [
+        {
+          "file_id": "000851",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite.dts",
+          "group": "M09-supporting-BPI-R4Lite-board-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000869",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-mxl86252.dts",
+          "group": "M09-supporting-RFB-PCIe-USB-reference",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000878",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988d-rfb.dts",
+          "group": "M09-supporting-RFB-board-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000858",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-pro-8x-wifi-mt7996a.dtso",
+          "group": "M09-direct-8X-WiFi-overlay-PCIe-context",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000867",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth2-cux3410.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000872",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-spim-nand-nmbm.dtso",
+          "group": "M09-storage-overlay-boundary",
+          "disposition": "defer",
+          "owner_step": "M10"
+        },
+        {
+          "file_id": "000861",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth0-gsw.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        }
+      ]
+    },
+    {
+      "name": "M09-audit-round1-agent-2",
+      "assigned_non_high_risk_ids": [
+        "000847",
+        "000860",
+        "000874",
+        "000842",
+        "000862",
+        "000850",
+        "000876"
+      ],
+      "assigned_non_high_risk_rows": [
+        {
+          "file_id": "000847",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987.dtsi",
+          "group": "M09-supporting-non-8X-MT7987-SoC-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000860",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-emmc.dtso",
+          "group": "M09-storage-overlay-boundary",
+          "disposition": "defer",
+          "owner_step": "M10"
+        },
+        {
+          "file_id": "000874",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb.dts",
+          "group": "M09-supporting-RFB-board-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000842",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-pinctrl.dtsi",
+          "group": "M09-supporting-non-8X-MT7987-PCIe-pinctrl",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000862",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth1-an8831x.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000850",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite-2pcie-1L.dtso",
+          "group": "M09-supporting-BPI-R4Lite-PCIe-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000876",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988d-rfb-eth0-gsw.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        }
+      ]
+    },
+    {
+      "name": "M09-audit-round1-agent-3",
+      "assigned_non_high_risk_ids": [
+        "000865",
+        "000864",
+        "000852",
+        "000845",
+        "000848",
+        "000849",
+        "000853"
+      ],
+      "assigned_non_high_risk_rows": [
+        {
+          "file_id": "000865",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth2-an8831x.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000864",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7988a-rfb-eth1-cux3410.dtso",
+          "group": "M09-supporting-RFB-Ethernet-LED-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000852",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-rfb.dts",
+          "group": "M09-supporting-RFB-board-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000845",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987-spim-nand.dtso",
+          "group": "M09-storage-overlay-boundary",
+          "disposition": "defer",
+          "owner_step": "M10"
+        },
+        {
+          "file_id": "000848",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite-1pcie-2L.dtso",
+          "group": "M09-supporting-BPI-R4Lite-PCIe-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000849",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a-bananapi-bpi-r4-lite-2pcie-1L-M2.dtso",
+          "group": "M09-supporting-BPI-R4Lite-PCIe-overlays",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        },
+        {
+          "file_id": "000853",
+          "path": "target/linux/mediatek/files-6.6/arch/arm64/boot/dts/mediatek/mt7987a.dtsi",
+          "group": "M09-supporting-non-8X-MT7987-board-extras",
+          "disposition": "review-only",
+          "owner_step": "M09"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "non_high_risk_pool_count": 21,
+    "assigned_non_high_risk_unique_count": 21,
+    "overlap_with_common_high_risk": []
+  }
+}
