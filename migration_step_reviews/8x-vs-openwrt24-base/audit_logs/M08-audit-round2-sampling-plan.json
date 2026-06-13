@@ -1,0 +1,340 @@
+{
+  "step": "M08",
+  "round": "round2",
+  "seed": 10212099262495365859,
+  "generated_at": "2026-06-12T23:18:53.168014+00:00",
+  "audit_not_started_by_this_script": true,
+  "common_high_risk_ids": [
+    "000052",
+    "000343",
+    "000374",
+    "000375",
+    "000400",
+    "000421",
+    "000426",
+    "000441",
+    "000442",
+    "000455",
+    "000456",
+    "000458",
+    "000468",
+    "000471",
+    "000897",
+    "000898",
+    "000899",
+    "000900",
+    "000902",
+    "000903",
+    "000904",
+    "000957",
+    "001027",
+    "001028",
+    "001029",
+    "001037",
+    "001056",
+    "001057",
+    "001058",
+    "001060",
+    "001062",
+    "001063",
+    "001087",
+    "001101",
+    "001107",
+    "001113",
+    "001118",
+    "001119",
+    "001123"
+  ],
+  "round1_low_risk_ids_excluded_when_possible": [
+    "000346",
+    "000348",
+    "000350",
+    "000358",
+    "000359",
+    "000366",
+    "000368",
+    "000417",
+    "000469",
+    "000894",
+    "001017",
+    "001088",
+    "001099",
+    "001103",
+    "001104",
+    "001110",
+    "001111",
+    "001115",
+    "001116",
+    "001117",
+    "001122"
+  ],
+  "reused_round1_low_risk_due_to_pool_size": false,
+  "agents": [
+    {
+      "name": "M08-audit-round2-agent-1",
+      "low_risk_ids": [
+        "001091",
+        "000406",
+        "000356",
+        "001100",
+        "001019",
+        "000352",
+        "000393"
+      ],
+      "low_risk_rows": [
+        {
+          "file_id": "001091",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3004-netfilter-add-DSCP-learning-flow-to-xt_FLOWOFFLOAD.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000406",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0063-mtk-mt76-mt7996-add-support-for-EPCS.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "000356",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0013-mtk-mt76-mt7996-update-TX-RX-rates-via-MCU-command.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "001100",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3013-net-ethernet-mtk_ppe-add-PPE-cache-preserved-line-lo.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "001019",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-2701-crypto-add-aead-3des-md5.patch",
+          "group": "M08-H-crypto-EIP-review-only",
+          "disposition": "review-only",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000352",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0009-mtk-mt76-mt7996-Add-support-for-EMLSR.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "000393",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0050-mtk-mt76-mt7996-move-debug-APIs-to-common-part.patch",
+          "group": "M08-C-mt76-debug-testmode-review-only",
+          "disposition": "review-only",
+          "owner_step": "M08"
+        }
+      ],
+      "self_selected_additional_rows_required": 5,
+      "self_selected_rules": [
+        "Choose exactly 5 additional rows from the M08 TSV.",
+        "Do not overlap common high-risk rows.",
+        "Do not overlap this agent's assigned low-risk sample rows.",
+        "Choose by independent risk judgment after reading the M08 TSV/markdown/JSON."
+      ]
+    },
+    {
+      "name": "M08-audit-round2-agent-2",
+      "low_risk_ids": [
+        "001102",
+        "001105",
+        "000347",
+        "000431",
+        "000384",
+        "001121",
+        "000409"
+      ],
+      "low_risk_rows": [
+        {
+          "file_id": "001102",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3015-netfilter-add-DEV_PATH_MTK_WDMA-path-to-nft_flow_offload.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "001105",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3018-netfilter-fix-memory-leak-issue-for-the-nft_flow_offload.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000347",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0004-mtk-mt76-mt7996-Remove-wed-rro-ring-add-napi-at-init.patch",
+          "group": "M08-C-mt76-WED-RRO-HWRRO-runtime",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000431",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0088-mtk-mt76-mt7996-add-scan-dwell-time-hw-cap.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "000384",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0041-mtk-mt76-use-wcid_idx-instead-of-wcid-in-mt76_rx_sta.patch",
+          "group": "M08-C-mt76-WED-RRO-HWRRO-runtime",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "001121",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3034-net-ethernet-mtk_wed-add-WDMA-disable-flow-to-WiFi-L.patch",
+          "group": "M08-F-kernel-WED-PPE-runtime-stack",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000409",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0066-mtk-mt76-mt7996-testmode-refactor.patch",
+          "group": "M08-C-mt76-debug-testmode-review-only",
+          "disposition": "review-only",
+          "owner_step": "M08"
+        }
+      ],
+      "self_selected_additional_rows_required": 5,
+      "self_selected_rules": [
+        "Choose exactly 5 additional rows from the M08 TSV.",
+        "Do not overlap common high-risk rows.",
+        "Do not overlap this agent's assigned low-risk sample rows.",
+        "Choose by independent risk judgment after reading the M08 TSV/markdown/JSON."
+      ]
+    },
+    {
+      "name": "M08-audit-round2-agent-3",
+      "low_risk_ids": [
+        "000394",
+        "001035",
+        "001112",
+        "000436",
+        "001092",
+        "001109",
+        "000407"
+      ],
+      "low_risk_rows": [
+        {
+          "file_id": "000394",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0051-mtk-mt76-rework-chanctx-scan-roc-for-mlo-support.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "001035",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-2717-net-ethernet-mtk_eth_soc-add-GLO_MEM-support-for-lro.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "001112",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3025-Fix-Eagle-mlo-tx-T.P-too-low-issue.patch",
+          "group": "M08-F-kernel-WED-PPE-runtime-stack",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000436",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0094-mtk-mt76-per-band-sw-token-needs-to-consider-MLO-aff.patch",
+          "group": "M08-C-mt76-MLO-wireless-policy-handoff",
+          "disposition": "defer",
+          "owner_step": "M07"
+        },
+        {
+          "file_id": "001092",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3005-netfilter-add-DEV_PATH_MTK_WDMA-path-to-xt_FLOWOFFLO.patch",
+          "group": "M08-E-PPE-RSS-LRO-netfilter-flow-offload",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "001109",
+          "status": "A",
+          "path": "target/linux/mediatek/patches-6.6/999-3022-refactor-mtk_wed_assgin-not-base-on-pci-domain.patch",
+          "group": "M08-F-kernel-WED-PPE-runtime-stack",
+          "disposition": "needs-evidence",
+          "owner_step": "M08"
+        },
+        {
+          "file_id": "000407",
+          "status": "A",
+          "path": "package/kernel/mt76/patches/0064-mtk-mt76-mt7996-add-testmode-rx-gain-cal-support.patch",
+          "group": "M08-C-mt76-debug-testmode-review-only",
+          "disposition": "review-only",
+          "owner_step": "M08"
+        }
+      ],
+      "self_selected_additional_rows_required": 5,
+      "self_selected_rules": [
+        "Choose exactly 5 additional rows from the M08 TSV.",
+        "Do not overlap common high-risk rows.",
+        "Do not overlap this agent's assigned low-risk sample rows.",
+        "Choose by independent risk judgment after reading the M08 TSV/markdown/JSON."
+      ]
+    }
+  ],
+  "coverage_summary": {
+    "tsv_row_count": 87,
+    "json_file_count": 87,
+    "common_high_risk_count": 39,
+    "non_high_risk_pool_count": 48,
+    "preferred_non_round1_pool_count": 27,
+    "assigned_low_risk_unique_count": 21,
+    "assigned_low_risk_overlap_with_round1_count": 0,
+    "assigned_low_risk_overlap_with_round1_ids": [],
+    "assigned_low_risk_by_group": {
+      "M08-C-mt76-MLO-wireless-policy-handoff": 6,
+      "M08-C-mt76-WED-RRO-HWRRO-runtime": 2,
+      "M08-C-mt76-debug-testmode-review-only": 3,
+      "M08-E-PPE-RSS-LRO-netfilter-flow-offload": 6,
+      "M08-F-kernel-WED-PPE-runtime-stack": 3,
+      "M08-H-crypto-EIP-review-only": 1
+    },
+    "assigned_low_risk_by_disposition": {
+      "defer": 6,
+      "needs-evidence": 11,
+      "review-only": 4
+    },
+    "assigned_low_risk_by_owner_step": {
+      "M07": 6,
+      "M08": 15
+    }
+  },
+  "validation": {
+    "high_risk_ids_all_present": true,
+    "each_agent_low_risk_count": true,
+    "no_low_risk_overlap_with_high_risk": true,
+    "no_low_risk_duplicates_across_agents": true,
+    "no_low_risk_overlap_with_round1": true,
+    "json_valid": true
+  }
+}
