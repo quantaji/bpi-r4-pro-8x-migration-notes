@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "Reference sources for row-level provenance scans. Paths are relative to the migration-notes-repo directory.",
+  "sources": [
+    {
+      "name": "direct-8x-vendor",
+      "source_type": "direct-8x-vendor",
+      "path": "../reference-source-codes/vendors/BPI-R4PRO-8X-OPENWRT-V24.10.0-Master-Devel",
+      "role": "Primary full vendor tree A; used for full-file context and added-file content."
+    },
+    {
+      "name": "baseline-openwrt-24.10.0",
+      "source_type": "openwrt-baseline",
+      "path": "../reference-source-codes/upstreams/openwrt-24.10.0",
+      "role": "Baseline tree B for interpreting modified and deleted rows."
+    },
+    {
+      "name": "target-openwrt-25.12.4",
+      "source_type": "target-openwrt",
+      "path": "../reference-source-codes/upstreams/openwrt-25.12.4",
+      "role": "Target structure and target-era same-path/provenance evidence."
+    },
+    {
+      "name": "openwrt-main",
+      "source_type": "openwrt-upstream",
+      "path": "../reference-source-codes/upstreams/openwrt-main",
+      "role": "Newer OpenWrt reference only."
+    },
+    {
+      "name": "mtk-openwrt-24.10",
+      "source_type": "mtk-openwrt-sdk",
+      "path": "../reference-source-codes/MTK/openwrt-24.10-mtk",
+      "role": "Applied MTK 24.10 SDK tree."
+    },
+    {
+      "name": "mtk-openwrt-25.12",
+      "source_type": "mtk-openwrt-sdk",
+      "path": "../reference-source-codes/MTK/openwrt-25.12-mtk",
+      "role": "Applied MTK 25.12 SDK tree."
+    },
+    {
+      "name": "mtk-openwrt-21.02",
+      "source_type": "mtk-openwrt-sdk",
+      "path": "../reference-source-codes/MTK/openwrt-21.02-mtk",
+      "role": "Older MTK SDK reference for legacy carry-over checks."
+    },
+    {
+      "name": "mtk-openwrt-feeds",
+      "source_type": "mtk-feeds",
+      "path": "../reference-source-codes/MTK/mtk-openwrt-feeds",
+      "role": "Raw MTK feed and SDK integration reference."
+    },
+    {
+      "name": "bpi-r4pro-4e-vendor",
+      "source_type": "bpi-sibling-vendor",
+      "path": "../reference-source-codes/vendors/BPI-R4PRO-4E-OPENWRT-V24.10.0-Master-Devel",
+      "role": "BPI-R4 Pro sibling vendor tree."
+    },
+    {
+      "name": "bpi-r4lite-vendor",
+      "source_type": "bpi-sibling-vendor",
+      "path": "../reference-source-codes/vendors/BPI-R4Lite-OPENWRT-V24.10.0-Master-Devel",
+      "role": "BPI R4 Lite vendor style and board-family reference."
+    },
+    {
+      "name": "bpi-r4-mt76-vendor",
+      "source_type": "bpi-sibling-vendor",
+      "path": "../reference-source-codes/vendors/BPI-R4-MT76-OPENWRT-V21.02",
+      "role": "Older BPI R4 MT76 vendor reference."
+    },
+    {
+      "name": "linux-v6.6.104",
+      "source_type": "linux-upstream",
+      "path": "../reference-source-codes/upstreams/linux-v6.6.104",
+      "role": "Kernel baseline reference for MTK 24.10 / 6.6-era patches."
+    },
+    {
+      "name": "linux-v6.12.87",
+      "source_type": "linux-upstream",
+      "path": "../reference-source-codes/upstreams/linux-v6.12.87",
+      "role": "Target kernel version reference."
+    },
+    {
+      "name": "linux-v6.18",
+      "source_type": "linux-upstream",
+      "path": "../reference-source-codes/upstreams/linux-v6.18",
+      "role": "Newer kernel provenance/future-direction reference."
+    },
+    {
+      "name": "mt76-upstream",
+      "source_type": "mt76-upstream",
+      "path": "../reference-source-codes/upstreams/mt76",
+      "role": "Upstream mt76 wireless driver reference."
+    },
+    {
+      "name": "u-boot-upstream",
+      "source_type": "u-boot-upstream",
+      "path": "../reference-source-codes/upstreams/u-boot",
+      "role": "Upstream U-Boot reference."
+    }
+  ]
+}
