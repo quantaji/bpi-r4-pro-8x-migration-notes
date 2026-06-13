@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "description": "Bucket rules for Phase 2 external owner handoffs that are not re-acknowledged by the owner step artifacts. These rules encode the accepted P2 global handoff bucket audit remediation, not mechanical routing facts.",
+  "rules": [
+    {
+      "match": {
+        "owner_step": "M07"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M07 implementation",
+      "audit_rationale": "Audit says future M07 implementer reading only M07 artifacts could miss this wireless policy/MLO/DFS/QoS/RSNO/off-channel handoff."
+    },
+    {
+      "match": {
+        "owner_step": "M10"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M10 implementation",
+      "audit_rationale": "Audit says reset-boot-count storage/recovery rows are deferred to M10 but not re-acknowledged by M10 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M11"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M11 implementation",
+      "audit_rationale": "Audit says target-missing/deleted mac80211/hostapd churn rows could be missed by M11 release/provenance validation."
+    },
+    {
+      "match": {
+        "owner_step": "M05",
+        "source_step": "M01",
+        "file_id": "000051"
+      },
+      "audit_bucket": "needs-human-decision",
+      "audit_action": "decide explicit split across M05/M08/M11 before implementation",
+      "audit_rationale": "Audit says netdevices.mk mixes Airoha PHY, MediaTek HNAT/offload, and package closure; ownership should not be silently assigned only to M05."
+    },
+    {
+      "match": {
+        "owner_step": "M05"
+      },
+      "audit_bucket": "covered-by-topic",
+      "audit_action": "keep visible in global worklist; no immediate backfill unless follow-up audit disagrees",
+      "audit_rationale": "Audit says M05 markdown covers PHY/EEE/PCS/SFP/DSA/10G backports and full wired topics at topic level."
+    },
+    {
+      "match": {
+        "owner_step": "M06",
+        "source_step": "M03",
+        "file_id": "001114"
+      },
+      "audit_bucket": "global-worklist-only",
+      "audit_action": "keep only in global worklist unless later evidence promotes it",
+      "audit_rationale": "Audit says MT7988D RFB option-type-2 Wi-Fi/PCIe DTS is supporting context only, not direct 8X truth."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M03",
+        "file_id": "001120"
+      },
+      "audit_bucket": "global-worklist-only",
+      "audit_action": "keep only in global worklist unless later evidence promotes it",
+      "audit_rationale": "Audit says MT7987 WED DTS is supporting context only, not direct 8X authority or a normal M08 row."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M04",
+        "file_id": "001044"
+      },
+      "audit_bucket": "needs-human-decision",
+      "audit_action": "decide explicit M05-primary and M08-secondary split before implementation",
+      "audit_rationale": "Round1 x5 audit found owner conflict: M05 has exact rewrite row for mixed DSA/non-DSA 10G handling, while M08 may only own QDMA/rate/performance/offload adjacency."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M00",
+        "file_id": "001054"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M05",
+        "file_id": "001054"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M04",
+        "file_id": "000825"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M11",
+        "file_id": "000825"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M07",
+        "file_id": "000225"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M07",
+        "file_id": "000256"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08",
+        "source_step": "M07",
+        "file_id": "000289"
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M08 implementation",
+      "audit_rationale": "Audit says this is a real M08 offload/acceleration entry point that is not explicitly visible in M08 artifacts."
+    },
+    {
+      "match": {
+        "owner_step": "M08"
+      },
+      "audit_bucket": "covered-by-topic",
+      "audit_action": "keep visible in global worklist; no immediate backfill unless follow-up audit disagrees",
+      "audit_rationale": "Audit says M08 markdown covers netfilter/nft flowtable, HNAT, PPE/RSS/LRO, WED/PPE runtime, and acceleration-performance topics."
+    },
+    {
+      "match": {
+        "owner_step": "M09",
+        "source_step": "M01",
+        "file_id": "000053"
+      },
+      "audit_bucket": "wrong-owner-or-source",
+      "audit_action": "review ownership before implementation; likely M11 package-closure rather than M09",
+      "audit_rationale": "Audit says package/kernel/linux/modules/usb.mk is package/release validation material, even if M09 cares about USB runtime."
+    },
+    {
+      "match": {
+        "owner_step": "M09",
+        "file_id": [
+          "001135",
+          "001136",
+          "001138",
+          "001146",
+          "001147",
+          "001148"
+        ]
+      },
+      "audit_bucket": "true-owner-gap",
+      "audit_action": "consider backfill or formal global handoff addendum before M09 implementation",
+      "audit_rationale": "Round1 x5 audit found M09 static PCIe/USB topology coverage is insufficient for PCIe controller/TPHY driver behavior; owner artifacts do not explicitly re-acknowledge this file_id/topic."
+    },
+    {
+      "match": {
+        "owner_step": "M09"
+      },
+      "audit_bucket": "covered-by-topic",
+      "audit_action": "keep visible in global worklist; no immediate backfill unless follow-up audit disagrees",
+      "audit_rationale": "Audit says M09 markdown covers LVTS/fan, PWM, USB clock, PCIe expansion, IRQ affinity, soft on/off, and TPHY board-extra topics."
+    }
+  ]
+}

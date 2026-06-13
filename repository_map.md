@@ -1,5 +1,95 @@
 ## Repository Map
 
+This notes repository is the control plane for the migration. It stores project
+rules, routing scripts, migration-step reviews, and audit evidence. The source
+trees and generated diffsets live one directory above this repository.
+
+### Notes Repository Layout
+
+```text
+./
+├── archive/
+├── migration_step_reviews/
+├── rules/
+├── schemas/
+├── scripts/
+├── feature_migration_step_map.md
+├── migration_roadmap.md
+├── migration_step_batch_review_skill.md
+├── project_guidelines.md
+└── repository_map.md
+```
+
+#### `migration_step_reviews/8x-vs-openwrt24-base`
+
+This directory stores Project Phase 2 review artifacts for the 8X vendor source
+diff against OpenWrt 24.10.
+
+The per-step files are the audited source-step review matrices:
+
+```text
+M00-*.md / M00-*.files.tsv
+...
+M11-*.md / M11-*.files.tsv
+```
+
+The global P2 files are implementation-entry indexes derived from the audited
+M00-M11 matrices:
+
+```text
+P2-owner-step-worklist.tsv
+P2-unacknowledged-owner-handoffs.tsv
+P2-cross-step-coherence-audit.md
+```
+
+Their meanings:
+
+- `P2-owner-step-worklist.tsv`: all M00-M11 review rows, regrouped by
+  `owner_step`. This is the main implementation worklist for Project Phase 3.
+  It preserves the source step that produced each row.
+- `P2-unacknowledged-owner-handoffs.tsv`: the subset of owner handoffs that are
+  present in a source-step TSV but not explicitly re-acknowledged by the owner
+  step's own TSV or markdown. These rows are not missing from Phase 2; they are
+  operational handoff risks for implementation agents that read only one
+  per-step TSV.
+- `P2-cross-step-coherence-audit.md`: human-readable closeout summary for the
+  global owner-step worklist, handoff bucket audit, and targeted cross-step
+  coherence checks.
+
+Do not fold these global files back into the audited M00-M11 TSVs by default.
+The per-step TSVs preserve the original review trace, while the P2 global files
+are derived implementation indexes.
+
+#### `rules`
+
+Rules used by scripts and reviews.
+
+- `p2-handoff-bucket-rules-v1.json` records the accepted bucket classifications
+  for unacknowledged P2 handoffs after the global no-context audit. The
+  classifications are audit decisions, not purely mechanical routing facts.
+
+#### `scripts`
+
+Reproducible helper scripts.
+
+- `build-p2-owner-worklists.py` rebuilds `P2-owner-step-worklist.tsv` and
+  `P2-unacknowledged-owner-handoffs.tsv` from the audited M00-M11 review TSVs
+  and markdown files. By default it applies
+  `rules/p2-handoff-bucket-rules-v1.json`.
+
+Example:
+
+```sh
+scripts/build-p2-owner-worklists.py
+```
+
+Use an output directory when checking reproducibility without overwriting the
+committed artifacts:
+
+```sh
+scripts/build-p2-owner-worklists.py --output-dir /tmp/p2-owner-worklists-check
+```
+
 Current local source workspace:
 
 ```text

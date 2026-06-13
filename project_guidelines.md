@@ -38,6 +38,17 @@ The tags decide which reference source needs to be inspected. This avoids treati
 
 The project is file-driven first, then cluster-driven, then migration-driven.
 
+The primary review input is the vendor delta `A - B`, where `A` is the
+BPI-R4 Pro 8X vendor OpenWrt 24.10 tree and `B` is upstream OpenWrt 24.10.
+Using the delta as the analysis unit prevents unmodified upstream baseline code
+from being mistaken for vendor behavior. The full vendor tree `A` is still
+needed to resolve full-file context, added files, generated image recipes,
+hardware DTS truth, and deleted-file interpretation. The baseline tree `B`
+explains what the diff removed or changed. Provenance and migration decisions
+should therefore start from the row/patch in `A - B`, then consult `A`, `B`,
+target OpenWrt 25.12, MTK trees, sibling vendor trees, and upstream references
+as evidence sources.
+
 ## 4. Project Phase 1: Diff and Tag
 
 Project Phase 1 builds an inventory of the BPI-R4 Pro 8X vendor delta.
