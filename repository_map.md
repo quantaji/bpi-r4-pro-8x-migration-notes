@@ -10,6 +10,7 @@ trees and generated diffsets live one directory above this repository.
 ./
 ├── archive/
 ├── phase3_commit_notes/
+├── phase3_agent_prompts/
 ├── migration_step_reviews/
 ├── phase3_supervisor_notes/
 ├── rules/
@@ -29,6 +30,14 @@ Required workflow for Project Phase 3 implementation. It tells implementation
 agents how to reconstruct vendor behavior, compare it with OpenWrt 25.12
 structure, make design decisions, implement code, verify results, and pass the
 minimalism gate. Read it before writing migration code.
+
+#### `phase3_agent_prompts`
+
+Reusable Phase 3 agent prompts and per-step appendices. These are the handoff
+entry points for new main/supervisor agent pairs. The shared base captures
+project-wide operating rules, source/action vocabulary, build-wrapper usage,
+and lessons learned from M01. Step appendices list the exact documents and
+source files that a new agent must read before designing that migration step.
 
 #### `phase3_supervisor_notes`
 
