@@ -47,3 +47,17 @@ The output includes candidate evidence, row/file summaries, deleted-row
 summaries, unresolved rows, a source snapshot, and a run manifest. This is
 mechanical provenance evidence, not a final migration decision. Omit
 `--basename-search` for a faster same-path-only dry run.
+
+To build the Phase 3 implementation worklists from audited Phase 2 and
+provenance artifacts:
+
+```sh
+scripts/build-phase3-worklists.py
+```
+
+This writes the canonical Phase 3 implementation index and flat M00-M11/queue
+views under:
+
+```text
+../analysis/phase3-worklists/8x-vs-openwrt24-base/
+```
