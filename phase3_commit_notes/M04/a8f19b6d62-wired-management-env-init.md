@@ -1,9 +1,9 @@
 # M04: BPI-R4 Pro 8X Wired Management And Firstboot Env Init
 
-Commit: `a8e067aac916199adcbac6db83b87a3eb387c6e4`
-Short commit: `a8e067aac9`
+Commit: `a8f19b6d6282c2e755774d376a941fefede5a61f`
+Short commit: `a8f19b6d62`
 Worktree: `../worktrees/openwrt-bpi-r4-pro-8x`
-GitHub: `quantaji/openwrt-bpi-r4-pro-8x-adaptation@a8e067aac916199adcbac6db83b87a3eb387c6e4`
+GitHub: `quantaji/openwrt-bpi-r4-pro-8x-adaptation@a8f19b6d6282c2e755774d376a941fefede5a61f`
 Branch: `codex/bpi-r4-pro-8x-v25.12.4`
 Date: 2026-06-14
 
